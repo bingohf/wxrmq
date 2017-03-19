@@ -54,7 +54,7 @@
 		}
 
 		var reset = function() {
-			$.get("uuid", function(data, status) {
+			var p = $.get("uuid").done(function(data){
 				eval(data);
 				$("#qrcode").attr("src",
 						"https://login.weixin.qq.com/qrcode/" + QRLogin.uuid);
@@ -71,6 +71,8 @@
 						login();
 					} else if (code ==408) {
 						listenScan();
+					}else if (code =400){
+						
 					}
 				});
 			}

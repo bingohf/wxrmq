@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.hql.internal.ast.ErrorReporter;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +24,7 @@ import retrofit2.Retrofit;
 import retrofit2.http.HTTP;
 import sun.util.logging.resources.logging;
 import wxrmq.WxLoginApi;
+import wxrmq.data.remote.ErrorResponse;
 
 public class NetWork {
 	private static Gson gson;
@@ -104,5 +107,11 @@ public class NetWork {
 		client = builder.build();
 		session.setAttribute("okhttp", client);
 		return client;
+	}
+	
+	public static String getErrorJson(Throwable e){
+		ErrorResponse response = new ErrorResponse();
+		response.setErrorMessage(e.getMessage());
+		return getGson().toJson(response);
 	}
 }

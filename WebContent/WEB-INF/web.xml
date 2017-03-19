@@ -41,12 +41,20 @@
 		<servlet-name>getContactServlet</servlet-name>
 		<servlet-class>wxrmq.GetContactServlet</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>recordRMServlet</servlet-name>
 		<servlet-class>wxrmq.RecordRMServlet</servlet-class>
 	</servlet>
-	
+
+	<servlet>
+		<servlet-name>joinServlet</servlet-name>
+		<servlet-class>wxrmq.JoinServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>loginServlet</servlet-name>
+		<servlet-class>wxrmq.LoginServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>uuid</servlet-name>
 		<url-pattern>/uuid</url-pattern>
@@ -62,7 +70,7 @@
 		<servlet-name>loginWxServlet</servlet-name>
 		<url-pattern>/loginWx</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>initWxServlet</servlet-name>
 		<url-pattern>/initWx</url-pattern>
@@ -75,5 +83,14 @@
 		<servlet-name>recordRMServlet</servlet-name>
 		<url-pattern>/recordRM</url-pattern>
 	</servlet-mapping>
-	
+
+	<servlet-mapping>
+		<servlet-name>joinServlet</servlet-name>
+		<url-pattern>/join</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>loginServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
 </web-app>

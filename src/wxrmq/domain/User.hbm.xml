@@ -1,16 +1,16 @@
 <?xml version="1.0"?>  
 <!DOCTYPE hibernate-mapping PUBLIC   
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">  
-      
-<hibernate-mapping>  
-    <class name="wxrmq.domain.WxUser" table ="wxuser">  
-        <id name="uin">  
-        </id>  
-        <property name="userName"/>  
-        <property name="nickName"/>  
-        <property name="headImgUrl"/>  
-        <property name="headImgBase64"/>  
-        
-    </class>  
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="wxrmq.domain.WxUser" table="wxuser">
+		<id name="uin">
+		</id>
+		<property name="userName" />
+		<property name="nickName" />
+		<property name="headImgUrl" />
+		<property name="headImgBase64" />
+
+	</class>
 </hibernate-mapping> 

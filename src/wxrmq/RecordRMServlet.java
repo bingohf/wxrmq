@@ -56,7 +56,7 @@ public class RecordRMServlet extends HttpServlet {
 	}
 
 	private void recordRmq(WxUser currentUser, WxUser[] wxUsers) {
-		SessionFactory dbfactory = WxRmqDB.getDBFactory();
+		SessionFactory dbfactory = RmqDB.getDBFactory();
 		Session session = dbfactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try{
