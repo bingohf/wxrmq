@@ -49,6 +49,21 @@ public class RmqDB {
 		session.close();
 	}
 
+	public static synchronized void delete(String hql) {
+		SessionFactory dbfactory = RmqDB.getDBFactory();
+		Session session = dbfactory.openSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			 Query query=session.createQuery(hql);
+			 query.executeUpdate();
+			tx.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			tx.rollback();
+		}
+		session.close();
+	}
+	
 	public static synchronized List<Object[]> query(String hql, Object... params) {
 
 		SessionFactory dbfactory = RmqDB.getDBFactory();
@@ -75,4 +90,6 @@ public class RmqDB {
 		}
 		return null;
 	}
+	
+	
 }

@@ -1,8 +1,11 @@
 package wxrmq;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,41 +37,102 @@ import okio.BufferedSink;
 import okio.Okio;
 import retrofit2.Call;
 import wxrmq.data.remote.ContactList;
+import wxrmq.data.remote.RecordRmq;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.domain.Account;
 import wxrmq.domain.WxUser;
+import wxrmq.domain.WxUser_Tag;
 import wxrmq.utils.NetWork;
 
 public class RecordRMServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		WxUser currentUser = NetWork.getGson().fromJson(req.getReader(), WxUser.class);
+		req.setCharacterEncoding("utf8");
+		//System.out.println(req.getReader().readLine());
+		RecordRmq recordRmq = NetWork.getGson().fromJson(req.getReader(), RecordRmq.class);
 		OkHttpClient client = NetWork.buildClient(req);
-		if (currentUser.getHeadImgUrl() != null){
-			currentUser.setHeadImgBase64(getImageBase64("https://wx.qq.com" +currentUser.getHeadImgUrl(), client));
+		if (recordRmq.getCurUser().getHeadImgUrl() != null){
+			recordRmq.getCurUser().setHeadImgBase64(getImageBase64("https://wx.qq.com" +recordRmq.getCurUser().getHeadImgUrl(), client));
 		}
-		Builder requestBuilder = new Request.Builder().url("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?r=1489192482320&seq=0");
-		Response response = client.newCall(requestBuilder.build()).execute();
-		if (response.isSuccessful()){
-			ContactList contactList =NetWork.getGson().fromJson(response.body().charStream(), ContactList.class);
-			recordRmq(currentUser,contactList.getMemberList());
-		}
-	}
-
-	private void recordRmq(WxUser currentUser, WxUser[] wxUsers) {
+		Account account = queryAccount("15375299866", "111");
+		account.setWx_unid(recordRmq.getCurUser().getUin());
+		
+		ArrayList<WxUser_Tag> tags = createTagList(recordRmq.getCurUser().getUin(), 
+				recordRmq.getMemberList());
+		
 		SessionFactory dbfactory = RmqDB.getDBFactory();
 		Session session = dbfactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try{
-		session.saveOrUpdate(currentUser);
+			session.saveOrUpdate(account);
+			session.saveOrUpdate(recordRmq.getCurUser());
+			for(WxUser_Tag tag: tags){
+				session.saveOrUpdate(tag);
+			}
 		tx.commit();
 		}catch(HibernateException e){
 			e.printStackTrace();
 			tx.rollback();
 		}
 		session.close();
+		
+	}
+
+	
+	private ArrayList<WxUser_Tag> createTagList(int unid, WxUser[] wxUsers){
+		 ArrayList<WxUser_Tag> list = new ArrayList<>();
+		 WxUser_Tag maleTag = new WxUser_Tag();
+		 maleTag.setId(String.format("%d_%d_%s", unid,0, "ÄÐ"));
+		 maleTag.setUnid(unid);
+		 maleTag.setType(0);
+		 maleTag.setLabel("ÄÐ");
+		 
+		 WxUser_Tag femaleTag = new WxUser_Tag();
+		 femaleTag.setId(String.format("%d_%d_%s", unid,0, "Å®"));
+		 femaleTag.setType(0);
+		 femaleTag.setUnid(unid);
+		 femaleTag.setLabel("Å®");
+		 
+		 HashMap<String, WxUser_Tag> map = new HashMap<>();
+		 for(WxUser user: wxUsers){
+			 if(user.getSex() ==0){
+				 femaleTag.setCount(femaleTag.getCount() +1); 
+			 }else if(user.getSex() == 1){
+				 maleTag.setCount(maleTag.getCount() +1); 
+			 }
+			 String city = user.getCity();
+			 WxUser_Tag cityTag = map.get(city);
+			 if(cityTag == null){
+				 cityTag = new WxUser_Tag();
+				 cityTag.setId(String.format("%d_%d_%s", unid,1, city));
+				 cityTag.setType(1);
+				 cityTag.setUnid(unid);
+				 cityTag.setLabel(city);
+				 map.put(city, cityTag);
+			 }
+			 cityTag.setCount(cityTag.getCount() +1);
+			 
+			 
+		 }
+		 list.add(maleTag);
+		 list.add(femaleTag);
+		 list.addAll(map.values());
+		 return list;
 	}
 	
+	
+	private Account queryAccount(String mobile, String password) {
+		String hql ="select a.mobile from Account a where mobile =? and password =? ";
+		List<Object[]> data = RmqDB.query(hql, mobile, password);
+		if(data != null && data.size()>0){
+			Account account = new Account();
+			account.setMobile(mobile);
+			account.setPassword(password);
+			return account;
+		}
+		return null;
+	}
 	private String getImageBase64(String url,OkHttpClient client) throws IOException {
 		Builder requestBuilder = new Request.Builder().url(url);
 		Response response = client.newCall(requestBuilder.build()).execute();

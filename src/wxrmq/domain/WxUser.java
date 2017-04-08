@@ -122,14 +122,6 @@ public class WxUser {
 		this.city = city;
 	}
 
-	public int getAttrStatus() {
-		return attrStatus;
-	}
-
-	public void setAttrStatus(int attrStatus) {
-		this.attrStatus = attrStatus;
-	}
-
 	public String getAlias() {
 		return alias;
 	}
@@ -226,7 +218,6 @@ public class WxUser {
 	private int starFriend;
 	private String province;
 	private String city;
-	private int attrStatus;
 	private String alias;
 	private int snsFlag;
 	private String uniFriend;

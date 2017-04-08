@@ -4,13 +4,12 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="wxrmq.domain.WxUser" table="wxuser">
-		<id name="uin">
+	<class name="wxrmq.domain.WxUser_Tag" table="wxuser_tag">
+		<id name="id">
 		</id>
-		<property name="userName" />
-		<property name="nickName" />
-		<property name="headImgUrl" />
-		<property name="headImgBase64" />
-		<property name="sex" />
+		<property name="unid" />
+		<property name="type" />
+		<property name="label" />
+		<property name="count" />
 	</class>
 </hibernate-mapping> 

@@ -20,5 +20,6 @@
           
          <mapping resource="wxrmq/domain/User.hbm.xml"/> 
          <mapping resource="wxrmq/domain/Account.hbm.xml"/> 
+         <mapping resource="wxrmq/domain/WxUser_Tag.hbm.xml"/> 
     </session-factory>  
 </hibernate-configuration> 

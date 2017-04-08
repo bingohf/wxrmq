@@ -55,6 +55,17 @@
 		<servlet-name>loginServlet</servlet-name>
 		<servlet-class>wxrmq.LoginServlet</servlet-class>
 	</servlet>
+
+	<servlet>
+		<servlet-name>rmqValueServlet</servlet-name>
+		<servlet-class>wxrmq.RMQValueServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>testServlet</servlet-name>
+		<servlet-class>wxrmq.TestServlet</servlet-class>
+	</servlet>
+		
 	<servlet-mapping>
 		<servlet-name>uuid</servlet-name>
 		<url-pattern>/uuid</url-pattern>
@@ -64,7 +75,6 @@
 		<servlet-name>listenStateServlet</servlet-name>
 		<url-pattern>/listenState</url-pattern>
 	</servlet-mapping>
-
 
 	<servlet-mapping>
 		<servlet-name>loginWxServlet</servlet-name>
@@ -92,5 +102,15 @@
 	<servlet-mapping>
 		<servlet-name>loginServlet</servlet-name>
 		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>rmqValueServlet</servlet-name>
+		<url-pattern>/rmqValue</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>testServlet</servlet-name>
+		<url-pattern>/test</url-pattern>
 	</servlet-mapping>
 </web-app>

@@ -53,6 +53,7 @@ public class InitWxServlet extends HttpServlet {
 				resp.addHeader(name, value);
 			}
 		}
+		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		resp.getWriter().write(response.body().string());
 		resp.setStatus(response.code());
