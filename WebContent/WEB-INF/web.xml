@@ -32,7 +32,10 @@
 		<servlet-name>loginWxServlet</servlet-name>
 		<servlet-class>wxrmq.LoginWxServlet</servlet-class>
 	</servlet>
-
+	<servlet>
+		<servlet-name>rmqValueServlet</servlet-name>
+		<servlet-class>wxrmq.RmqValueServlet</servlet-class>
+	</servlet>
 	<servlet>
 		<servlet-name>initWxServlet</servlet-name>
 		<servlet-class>wxrmq.InitWxServlet</servlet-class>
@@ -58,7 +61,7 @@
 
 	<servlet>
 		<servlet-name>rmqValueServlet</servlet-name>
-		<servlet-class>wxrmq.RMQValueServlet</servlet-class>
+		<servlet-class>wxrmq.RmqValueServlet</servlet-class>
 	</servlet>
 
 	<servlet>

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.net.httpserver.Headers;
@@ -55,8 +57,10 @@ public class RecordRMServlet extends HttpServlet {
 		if (recordRmq.getCurUser().getHeadImgUrl() != null){
 			recordRmq.getCurUser().setHeadImgBase64(getImageBase64("https://wx.qq.com" +recordRmq.getCurUser().getHeadImgUrl(), client));
 		}
-		Account account = queryAccount("15375299866", "111");
+		HttpSession sess = req.getSession(true);
+		Account account = (Account) sess.getAttribute("account");
 		account.setWx_unid(recordRmq.getCurUser().getUin());
+		
 		
 		ArrayList<WxUser_Tag> tags = createTagList(recordRmq.getCurUser().getUin(), 
 				recordRmq.getMemberList());
@@ -65,11 +69,16 @@ public class RecordRMServlet extends HttpServlet {
 		Session session = dbfactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try{
-			session.saveOrUpdate(account);
-			session.saveOrUpdate(recordRmq.getCurUser());
+			Query query=session.createQuery("delete WxUser_Tag s where s.unid=" + recordRmq.getCurUser().getUin());
+			query.executeUpdate();
+			
+
 			for(WxUser_Tag tag: tags){
 				session.saveOrUpdate(tag);
 			}
+			session.saveOrUpdate(account);
+			recordRmq.getCurUser().setFriendsCount(getFriendsCount(recordRmq.getMemberList()));
+			session.saveOrUpdate(recordRmq.getCurUser());
 		tx.commit();
 		}catch(HibernateException e){
 			e.printStackTrace();
@@ -97,6 +106,9 @@ public class RecordRMServlet extends HttpServlet {
 		 HashMap<String, WxUser_Tag> map = new HashMap<>();
 		 for(WxUser user: wxUsers){
 			 if(user.getSex() ==0){
+				 continue;
+			 }
+			 if(user.getSex() ==2){
 				 femaleTag.setCount(femaleTag.getCount() +1); 
 			 }else if(user.getSex() == 1){
 				 maleTag.setCount(maleTag.getCount() +1); 
@@ -147,6 +159,17 @@ public class RecordRMServlet extends HttpServlet {
 		return base64;
 	}
 	
+	private int getFriendsCount(WxUser[] wxUsers){
+		int count =0;
+		for(WxUser wxUser:wxUsers){
+			if(wxUser.getSex() == 0){
+				continue;
+			}
+			++count;
+		}
+		return count;
+		
+	}
 	
 
 }

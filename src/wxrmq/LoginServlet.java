@@ -48,11 +48,8 @@ public class LoginServlet extends HttpServlet {
 	}
 	
 	private Account queryAccount(String mobile, String password) {
-		String hql ="select a.mobile from Account a where mobile =? and password =? ";
-		List<Object[]> data = RmqDB.query(hql, mobile, password);
-		if(data != null && data.size()>0){
-			Account account = new Account();
-			account.setMobile(mobile);
+		Account account = RmqDB.getById(Account.class, mobile);
+		if (account.getPassword().equals(password)){
 			return account;
 		}
 		return null;

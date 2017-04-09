@@ -201,7 +201,13 @@ public class WxUser {
 	public void setUin(int uin) {
 		this.uin = uin;
 	}
+	public int getFriendsCount() {
+		return friendsCount;
+	}
 
+	public void setFriendsCount(int friendsCount) {
+		this.friendsCount = friendsCount;
+	}
 	private int uin;
 	private String userName;
 	private String nickName;
@@ -227,5 +233,7 @@ public class WxUser {
 	private String encryChatRoomId;
 	private int isOwner;
 	private String headImgBase64;
+	private int friendsCount;
+
 
 }

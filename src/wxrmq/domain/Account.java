@@ -10,7 +10,7 @@ import wxrmq.RmqDB;
 public class Account {
 	private String mobile;
 	private String password;
-	private int wx_unid;
+	private Integer wx_unid;
 
 	public static Account createAccount(String mobile, String password) {
 		Account account = new Account();
@@ -36,11 +36,11 @@ public class Account {
 		this.password = password;
 	}
 
-	public int getWx_unid() {
+	public Integer getWx_unid() {
 		return wx_unid;
 	}
 
-	public void setWx_unid(int wx_unid) {
+	public void setWx_unid(Integer wx_unid) {
 		this.wx_unid = wx_unid;
 	}
 }

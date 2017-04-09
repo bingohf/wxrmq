@@ -1,5 +1,6 @@
 package wxrmq;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -85,6 +86,19 @@ public class RmqDB {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
+	public static <T> T getById(Class<T> cls, Serializable id) {
+		SessionFactory dbfactory = RmqDB.getDBFactory();
+		Session session = dbfactory.openSession();
+		try {
+			return session.get(cls, id);
+		} catch (HibernateException e) {
+			e.printStackTrace();
 		} finally {
 			session.close();
 		}
