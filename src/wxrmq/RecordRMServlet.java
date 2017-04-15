@@ -3,6 +3,7 @@ package wxrmq;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -89,7 +90,7 @@ public class RecordRMServlet extends HttpServlet {
 	}
 
 	
-	private ArrayList<WxUser_Tag> createTagList(int unid, WxUser[] wxUsers){
+	private ArrayList<WxUser_Tag> createTagList(Long unid, WxUser[] wxUsers){
 		 ArrayList<WxUser_Tag> list = new ArrayList<>();
 		 WxUser_Tag maleTag = new WxUser_Tag();
 		 maleTag.setId(String.format("%d_%d_%s", unid,0, "ÄÐ"));

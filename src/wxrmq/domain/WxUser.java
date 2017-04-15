@@ -1,5 +1,7 @@
 package wxrmq.domain;
 
+import java.math.BigInteger;
+
 public class WxUser {
 
 	public String getUserName() {
@@ -194,11 +196,11 @@ public class WxUser {
 		this.headImgBase64 = headImgBase64;
 	}
 
-	public int getUin() {
+	public Long getUin() {
 		return uin;
 	}
 
-	public void setUin(int uin) {
+	public void setUin(Long uin) {
 		this.uin = uin;
 	}
 	public int getFriendsCount() {
@@ -208,7 +210,7 @@ public class WxUser {
 	public void setFriendsCount(int friendsCount) {
 		this.friendsCount = friendsCount;
 	}
-	private int uin;
+	private Long uin;
 	private String userName;
 	private String nickName;
 	private String headImgUrl;

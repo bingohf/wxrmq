@@ -1,9 +1,10 @@
 package wxrmq.domain;
 
+import java.math.BigInteger;
 
 public class WxUser_Tag {
 	private String id;
-	private int unid;
+	private Long unid;
 	private int type;
 	private String label;
 	private int count;
@@ -13,10 +14,10 @@ public class WxUser_Tag {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public int getUnid() {
+	public Long getUnid() {
 		return unid;
 	}
-	public void setUnid(int unid) {
+	public void setUnid(Long unid) {
 		this.unid = unid;
 	}
 	public int getType() {

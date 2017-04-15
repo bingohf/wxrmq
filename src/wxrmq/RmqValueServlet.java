@@ -46,29 +46,35 @@ public class RmqValueServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
 		Account account = (Account) session.getAttribute("account");
+		Long wxid = 0L;
+		if (account != null) {
+			wxid = account.getWx_unid();
+		} else {
+			wxid = Long.parseLong(req.getParameter("wxid"));
+		}
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		RmqValue rmqValue = new RmqValue();
-		if (account.getWx_unid() != null) {
-			List<Object[]> result = RmqDB.query(
-					"select  a.label,a.count from WxUser_Tag a where a.type=0 and a.unid=? order by a.count desc", account.getWx_unid());
-			for (Object[] row : result) {
-				RmqValue.Item item = new RmqValue.Item();
-				item.setLabel((String) row[0]);
-				item.setCount((int) row[1]);
-				rmqValue.getSexValue().add(item);
-			}
-			WxUser wxUser = RmqDB.getById(WxUser.class, account.getWx_unid());
-			rmqValue.setWxUser(wxUser);
+		List<Object[]> result = RmqDB.query(
+				"select  a.label,a.count from WxUser_Tag a where a.type=0 and a.unid=? order by a.count desc",
+				wxid);
+		for (Object[] row : result) {
+			RmqValue.Item item = new RmqValue.Item();
+			item.setLabel((String) row[0]);
+			item.setCount((int) row[1]);
+			rmqValue.getSexValue().add(item);
+		}
+		WxUser wxUser = RmqDB.getById(WxUser.class, wxid);
+		rmqValue.setWxUser(wxUser);
 
-			result = RmqDB.query(
-					"select  a.label,a.count from WxUser_Tag a where a.type=1 and a.unid=?  order by a.count desc", account.getWx_unid());
-			for (Object[] row : result) {
-				RmqValue.Item item = new RmqValue.Item();
-				item.setLabel((String) row[0]);
-				item.setCount((int) row[1]);
-				rmqValue.getCityValue().add(item);
-			}
+		result = RmqDB.query(
+				"select  a.label,a.count from WxUser_Tag a where a.type=1 and a.unid=?  order by a.count desc",
+				wxid);
+		for (Object[] row : result) {
+			RmqValue.Item item = new RmqValue.Item();
+			item.setLabel((String) row[0]);
+			item.setCount((int) row[1]);
+			rmqValue.getCityValue().add(item);
 		}
 
 		resp.getWriter().write(NetWork.getGson().toJson(rmqValue));

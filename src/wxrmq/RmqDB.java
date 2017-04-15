@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+import org.w3c.dom.css.ElementCSSInlineStyle;
 
 
 public class RmqDB {
@@ -78,6 +79,8 @@ public class RmqDB {
 					query = query.setInteger(i++, (Integer)param);
 				}else if (param instanceof String){
 					query = query.setString(i++, (String)param);
+				}else if (param instanceof Long){
+					query = query.setLong(i++, (Long)param);
 				}
 			}
 			List<Object[]> list=  query.list();
