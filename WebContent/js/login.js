@@ -8,7 +8,7 @@ $(document).ready(function() {
 			data : $('#loginForm').serialize()
 		}).done(function(a, b, c) {
 			$("#panel_error").hide();
-			
+			window.location = "my_home.html";
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$("#errorMessage").html(xhr.responseText);
 			$("#panel_error").show();

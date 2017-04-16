@@ -8,9 +8,34 @@ public class RmqValue {
 	private WxUser wxUser;
 	private ArrayList<Item> sexValue = new ArrayList<>();
 	private ArrayList<Item>  cityValue = new ArrayList<>();
+	private String mobile;
+	private Float quotaPrice;
+	
+	
+	public String getMobile() {
+		return mobile;
+	}
 
-	
-	
+
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+
+
+	public Float getQuotaPrice() {
+		return quotaPrice;
+	}
+
+
+
+	public void setQuotaPrice(Float quotaPrice) {
+		this.quotaPrice = quotaPrice;
+	}
+
+
+
 	public ArrayList<Item> getSexValue() {
 		return sexValue;
 	}

@@ -34,7 +34,7 @@ public class JoinServlet extends HttpServlet {
 		req.setCharacterEncoding("utf8");
 		String mobile = req.getParameter("mobile");
 		String password = req.getParameter("password");
-		String mobileCode = req.getParameter("mobileCode");
+		String mobileCode = mobile + "_" + req.getParameter("mobileCode");
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		if(mobile.isEmpty() || password.isEmpty()){
 			 resp.setStatus(403);

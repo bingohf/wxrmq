@@ -8,13 +8,58 @@
 			$(document).attr('title', Wx.WxUser.NickName);
 			$("#lb_nickname").html(Wx.WxUser.NickName + ' ('+ (Wx.WxUser.Sex ==1?'男':'女') +')');
 			$("#num_friendsCount").html(Wx.WxUser.FriendsCount);
-			for(var i= 0;i < Wx.SexValue.length; ++i){
+			/*		for(var i= 0;i < Wx.SexValue.length; ++i){
 				$("#sex").append($(tag2HTML(Wx.SexValue[i])));
 			}
 			
 			for(var i= 0;i < Wx.CityValue.length; ++i){
 				$("#city").append($(tag2HTML(Wx.CityValue[i])));
+			}*/
+			
+			var pie_sexData = [];
+			for(var i= 0;i < Wx.SexValue.length; ++i){
+				pie_sexData.push({y:Wx.SexValue[i].Count, label:Wx.SexValue[i].Label});
 			}
+			
+			
+			var pie_cityData = [];
+			for(var i= 0;i < Wx.CityValue.length; ++i){
+				pie_cityData.push({y:Wx.CityValue[i].Count, label:Wx.CityValue[i].Label});
+			}
+						
+			var chart = new CanvasJS.Chart("pie_sex",
+					{
+						theme: "theme2",
+						title:{
+							text: "性别分布"
+						},
+						data: [
+						{
+							type: "pie",
+							showInLegend: true,
+							legendText: "{label}",
+							dataPoints: pie_sexData
+						}
+						]
+					});
+			chart.render();
+			var chart = new CanvasJS.Chart("pie_city",
+					{
+						theme: "theme2",
+						title:{
+							text: "地域分布"
+						},
+						data: [
+						{
+							type: "pie",
+							showInLegend: true,
+							legendText: "{label}",
+							dataPoints: pie_cityData
+						}
+						]
+					});
+			chart.render();
+			
 		};
 
 	
@@ -42,4 +87,7 @@
 		        cache: false
 		    });
 		    loadDetail();
+		    
+		   
+
 		});

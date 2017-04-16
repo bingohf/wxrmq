@@ -12,4 +12,7 @@ public interface WxLoginApi {
 	@GET("cgi-bin/mmwebwx-bin/login")
 	Call<ResponseBody> listenState(@Query("loginicon") boolean loginicon, @Query("uuid") String uuid,
 			@Query("tip") int tip);
+	
+	
+	
 }

@@ -22,20 +22,10 @@
 				url:"rmqValue",
 				dataType:"json"
 			}).then(function(data){	
-				$("#friendsCount").html(data.WxUser.FriendsCount);
-		    	$("#div-sex").html('');
-		    	for (var i =0;i < data.SexValue.length; ++i){
-		    		var item =data.SexValue[i];
-		    		$("#div-sex").append('<div>' + item.Label +':' + item.Count +'</div>');
-		    	}
-		    	$("#div-city").html('');
-		    	for (var i =0;i < data.CityValue.length; ++i){
-		    		var item =data.CityValue[i];
-		    		if (item.Label ==''){
-		    			item.Label ='未知';
-		    		}
-		    		$("#div-city").append('<div>' + item.Label +':' + item.Count +'</div>');
-		    	}	    	
+				$("#input_mobile").val(data.Mobile);
+				if (data.WxUser){
+					$("#link_detail").show().attr("href", "wx.html?wxid=" + data.WxUser.Uin);
+				}
 		    	
 		    });	
 		};

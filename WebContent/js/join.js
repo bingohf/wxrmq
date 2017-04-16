@@ -35,6 +35,7 @@ $(document).ready(function() {
 			type : 'POST',
 			data : $('#joinForm').serialize()
 		}).done(function(a, b, c) {
+			$("#img_validationCode").click();
 			alert(a);
 		}).fail(function(xhr, textStatus, errorThrown) {
 			alert(xhr.responseText);
