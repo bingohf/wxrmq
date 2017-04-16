@@ -73,7 +73,16 @@
 		<servlet-name>testServlet</servlet-name>
 		<servlet-class>wxrmq.TestServlet</servlet-class>
 	</servlet>
-		
+	<servlet>
+		<servlet-name>ValidateCodeServlet</servlet-name>
+		<servlet-class>wxrmq.ValidateCodeServlet</servlet-class>
+	</servlet>		
+	<servlet>
+		<servlet-name>MobileValidationCodeServlet</servlet-name>
+		<servlet-class>wxrmq.MobileValidationCodeServlet</servlet-class>
+	</servlet>			
+	
+	
 	<servlet-mapping>
 		<servlet-name>uuid</servlet-name>
 		<url-pattern>/uuid</url-pattern>
@@ -126,4 +135,15 @@
 		<servlet-name>QueryServlet</servlet-name>
 		<url-pattern>/query</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ValidateCodeServlet</servlet-name>
+		<url-pattern>/validateCode</url-pattern>
+	</servlet-mapping>	
+	<servlet-mapping>
+		<servlet-name>MobileValidationCodeServlet</servlet-name>
+		<url-pattern>/mobileValidationCode</url-pattern>
+	</servlet-mapping>	
+	
+	
 </web-app>

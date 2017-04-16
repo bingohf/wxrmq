@@ -31,15 +31,35 @@ public class JoinServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("utf8");
 		String mobile = req.getParameter("mobile");
 		String password = req.getParameter("password");
-		Account account = null;
+		String mobileCode = req.getParameter("mobileCode");
+		resp.setHeader("Content-type", "text/html;charset=UTF-8");
+		if(mobile.isEmpty() || password.isEmpty()){
+			 resp.setStatus(403);
+			 resp.getWriter().write("用户名，密码不合法");
+			return;
+		}
+		if(!mobileCode.equals(req.getSession().getAttribute("mobileCode"))){
+			 resp.setStatus(403);
+			 resp.getWriter().write("手机验证码不正确");
+			return;
+		}
+		
+		
+		Account account = RmqDB.getById(Account.class, mobile);
 		try{
-			account = Account.createAccount(mobile, password);
-			HttpSession session = req.getSession(true);
-			session.setAttribute("account", account);
+			if (account == null){
+				account = Account.createAccount(mobile, password);
+				HttpSession session = req.getSession(true);
+				session.setAttribute("account", account);
+			}else{
+				 resp.setStatus(403);
+				 resp.getWriter().write("此用户已经存在");
+			}
 		}catch(Exception e){
-			resp.setStatus(500);
+		   resp.setStatus(500);
 		   resp.getWriter().write(e.getMessage());
 		}
 		

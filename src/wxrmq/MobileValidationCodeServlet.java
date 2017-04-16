@@ -13,10 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
-import org.hibernate.SessionFactory;
-
-import com.mysql.fabric.xmlrpc.base.Data;
-import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.net.httpserver.Headers;
 
 import okhttp3.MediaType;
@@ -31,33 +27,33 @@ import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.Account;
 import wxrmq.utils.NetWork;
 
-public class LoginServlet extends HttpServlet {
+public class MobileValidationCodeServlet extends HttpServlet {
+
+	
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(req, resp);
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf8");
-		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		String mobile = req.getParameter("mobile");
-		String password = req.getParameter("password");
-		Account account = queryAccount(mobile, password);
-		HttpSession session = req.getSession(true);
-		if(account != null){
-			session.setAttribute("account", account);
-		}else {
+		String validateCode = req.getParameter("validateCode");
+		String sessionCode = (String) req.getSession().getAttribute("validateCode");
+		resp.setHeader("Content-type", "text/html;charset=UTF-8");
+		String message ="";
+		if (sessionCode.equals(validateCode)){
+			req.getSession().setAttribute("mobileCode", "1111");
+			message = "手机验证码已经发送（1111）";
+		}else{
 			resp.setStatus(401);
-			resp.getWriter().write("用户名密码不正确");
+			message = "动态验证码不正确";
 		}
-	}
-	
-	private Account queryAccount(String mobile, String password) {
-		Account account = RmqDB.getById(Account.class, mobile);
-		if(account == null){
-			return null;
-		}
-		if (account.getPassword().equals(password)){
-			return account;
-		}
-		return null;
+		resp.getWriter().write(message);
+		
 	}
 	
 
