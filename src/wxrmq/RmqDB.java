@@ -66,6 +66,35 @@ public class RmqDB {
 		session.close();
 	}
 	
+	public static synchronized List<Object[]> sqlQuery(String sql, Object... params) {
+
+		SessionFactory dbfactory = RmqDB.getDBFactory();
+		Session session = dbfactory.openSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			Query query = session.createSQLQuery(sql);
+			int i =0;
+			for (Object param : params) {
+				if (param instanceof Integer){
+					query = query.setInteger(i++, (Integer)param);
+				}else if (param instanceof String){
+					query = query.setString(i++, (String)param);
+				}else if (param instanceof Long){
+					query = query.setLong(i++, (Long)param);
+				}
+			}
+			List<Object[]> list=  query.list();
+			tx.commit();
+			return list;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
 	public static synchronized List<Object[]> query(String hql, Object... params) {
 
 		SessionFactory dbfactory = RmqDB.getDBFactory();

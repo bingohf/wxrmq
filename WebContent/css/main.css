@@ -98,3 +98,17 @@
 .tag_label{
 	width:80px;
 }
+
+.list_item{
+	clear:both;
+	padding:5px;
+}
+.list_item .head{
+	width:80px;
+	height:80px;
+	float:left;
+}
+.list_item .main{
+	float:left;
+	padding-left:10px;
+}
