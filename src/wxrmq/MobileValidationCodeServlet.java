@@ -1,6 +1,7 @@
 package wxrmq;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.Account;
+import wxrmq.domain.SmSLog;
+import wxrmq.exceptions.SmsException;
 import wxrmq.utils.NetWork;
 
 public class MobileValidationCodeServlet extends HttpServlet {
@@ -46,23 +49,47 @@ public class MobileValidationCodeServlet extends HttpServlet {
 		String sessionCode = (String) req.getSession().getAttribute("validateCode");
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		String message ="";
-		
-		String mobileCode = String.format("%04d",(Math.abs(new Random(System.currentTimeMillis()).nextInt() %10000)));
-		if (sessionCode.equals(validateCode)){
-			req.getSession().setAttribute("mobileCode",mobile +"_"+ mobileCode);
-			message = "手机验证码已经发送";
-		//	sendSMS(mobile, mobileCode, NetWork.buildClient(req));
+		String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$"; 
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(mobile);
+		if (!matcher.matches()){
+			message = "手机号码不正确";
 		}else{
-			resp.setStatus(401);
-			message = "动态验证码不正确";
+			String mobileCode = String.format("%04d",(Math.abs(new Random(System.currentTimeMillis()).nextInt() %10000)));
+			if (sessionCode.equals(validateCode)){
+				try {
+					sendSMS(mobile, mobileCode, req.getRemoteAddr(), NetWork.buildClient(req));
+					req.getSession().setAttribute("mobileCode",mobile +"_"+ mobileCode);
+					message = "手机验证码已经发送";
+					System.out.println(mobileCode);
+				}
+				catch (SmsException e) {
+					resp.setStatus(401);
+					message = e.getMessage();
+				}
+			}else{
+				resp.setStatus(401);
+				message = "动态验证码不正确";
+			}
 		}
 		resp.getWriter().write(message);
 	}
 	
-	private void sendSMS(String mobile,String mobileCode,OkHttpClient okHttpClient) throws IOException{
-		String smsURL = "http://106.ihuyi.com/webservice/sms.php?method=Submit&account=cf_ddkeji008&password=5a216fec4d5e397df19d702cb6348e5f&mobile="+ mobile+"&format=json&content=%E6%82%A8%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%E6%98%AF%EF%BC%9A"+ mobileCode+"%E3%80%82%E8%AF%B7%E4%B8%8D%E8%A6%81%E6%8A%8A%E9%AA%8C%E8%AF%81%E7%A0%81%E6%B3%84%E9%9C%B2%E7%BB%99%E5%85%B6%E4%BB%96%E4%BA%BA%E3%80%82";
-		Builder requestBuilder = new Request.Builder().url(smsURL);
-		Response response = okHttpClient.newCall(requestBuilder.build()).execute();
+	private void sendSMS(String mobile,String mobileCode,String ip,OkHttpClient okHttpClient) throws IOException, SmsException{
+		SmSLog smSLog = RmqDB.getById(SmSLog.class, mobile);
+		if (smSLog == null || System.currentTimeMillis() - smSLog.getLastSentDate().getTime() > 60000){
+			String smsURL = "http://106.ihuyi.com/webservice/sms.php?method=Submit&account=cf_ddkeji008&password=5a216fec4d5e397df19d702cb6348e5f&mobile="+ mobile+"&format=json&content=%E6%82%A8%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%E6%98%AF%EF%BC%9A"+ mobileCode+"%E3%80%82%E8%AF%B7%E4%B8%8D%E8%A6%81%E6%8A%8A%E9%AA%8C%E8%AF%81%E7%A0%81%E6%B3%84%E9%9C%B2%E7%BB%99%E5%85%B6%E4%BB%96%E4%BA%BA%E3%80%82";
+			Builder requestBuilder = new Request.Builder().url(smsURL);
+			//Response response = okHttpClient.newCall(requestBuilder.build()).execute();
+		}else{
+			throw new SmsException("请求太频繁，请稍后再试");
+		}
+		smSLog = new SmSLog();
+		smSLog.setIp(ip);
+		smSLog.setLastSentDate(new Date());
+		smSLog.setMobile(mobile);
+		RmqDB.saveOrUpdate(smSLog);
+		
 	}
 	
 

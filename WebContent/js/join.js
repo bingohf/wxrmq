@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$("#signup_button").click(function() {
 		var $btn = $(this);
-		if($("#password").val() != $("#confirmPassword").val()){
+		if($("#password").val() != $("input#confrimPassword").val()){
 			alert('确认密码不正确');
 			return;
 		}
@@ -11,6 +11,7 @@ $(document).ready(function() {
 			type : 'POST',
 			data : $('#joinForm').serialize()
 		}).done(function(a, b, c) {
+			window.location = 'login.html';
 			
 		}).fail(function(xhr, textStatus, errorThrown) {
 			alert(xhr.responseText);

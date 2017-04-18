@@ -1,6 +1,18 @@
 $(document).ready(function() {
 	$("#btn_login").click(function() {
 		var $btn = $(this);
+		var mobile = $("#mobile").val();
+		var password = $("password").val();
+		if(mobile == ''){
+			$("#errorMessage").html('请输入手机号码');
+			$("#panel_error").show();
+			return;
+		}
+		if(password == ''){
+			$("#errorMessage").html('请输入密码');
+			$("#panel_error").show();
+			return;
+		}
 		$btn.button('loading');
 		$.ajax({
 			url : 'login',
