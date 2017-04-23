@@ -196,13 +196,7 @@ public class WxUser {
 		this.headImgBase64 = headImgBase64;
 	}
 
-	public Long getUin() {
-		return uin;
-	}
 
-	public void setUin(Long uin) {
-		this.uin = uin;
-	}
 	public int getFriendsCount() {
 		return friendsCount;
 	}
@@ -210,6 +204,22 @@ public class WxUser {
 	public void setFriendsCount(int friendsCount) {
 		this.friendsCount = friendsCount;
 	}
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public Long getUin() {
+		return uin;
+	}
+
+	public void setUin(Long uin) {
+		this.uin = uin;
+	}
+
 	private Long uin;
 	private String userName;
 	private String nickName;
@@ -236,6 +246,7 @@ public class WxUser {
 	private int isOwner;
 	private String headImgBase64;
 	private int friendsCount;
+	private String mobile;
 
 
 }

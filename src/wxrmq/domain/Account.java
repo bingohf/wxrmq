@@ -12,13 +12,11 @@ import wxrmq.RmqDB;
 public class Account {
 	private String mobile;
 	private String password;
-	private Long wx_unid;
 
 	public static Account createAccount(String mobile, String password) {
 		Account account = new Account();
 		account.mobile = mobile;
 		account.password = password;
-		RmqDB.save(account);
 		return account;
 	}
 
@@ -38,11 +36,5 @@ public class Account {
 		this.password = password;
 	}
 
-	public Long getWx_unid() {
-		return wx_unid;
-	}
 
-	public void setWx_unid(Long wx_unid) {
-		this.wx_unid = wx_unid;
-	}
 }

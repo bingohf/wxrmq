@@ -149,6 +149,7 @@
                   <p class="note"></p>
                 </dd>
               </dl>
+              <input type="hidden" id ="input_redirect_uri" name="redirect_uri"/>
               <input type="checkbox" aria-label="..." name ="agreement" value="Y"/>接受<a href="agreement.html" target="_blank">协议</a></p>
             </form>
             <button class="btn btn-primary" id="signup_button" data-disable-with="创建" data-loading-text="创建中...">创建个人账号</button>
@@ -207,20 +208,18 @@
       };
 
       var renderPie = function() {
-        var i = 0;
-        while (i < Rmq.MemberList.length) {
-          if (Rmq.MemberList[i].Sex == 0) {
-            Rmq.MemberList.splice(i, 1);
-          } else {
-            ++i;
-          }
-        }
         $("#contactCount").html(Rmq.MemberList.length);
         $("#quota_price").html(Rmq.MemberList.length / 40);
 
         var pie_sexData = groupCount(Rmq.MemberList, 'Sex');
         for (var i = 0; i < pie_sexData.length; i++) {
-          pie_sexData[i].label = pie_sexData[i].label == 1 ? '男' : '女';
+          var sex = '男';
+          if(pie_sexData[i].label == 0){
+            sex ='未知';
+          }else if(pie_sexData[i].label ==2){
+            sex ='女';
+          }
+          pie_sexData[i].label = sex ;
         }
         var chart = new CanvasJS.Chart("pie_sex", {
           theme: "theme2",
@@ -360,6 +359,7 @@
 
 
       $("#signup_button").click(function() {
+        $("#input_redirect_uri").val(redirect_uri);
         var $btn = $(this);
         if($("#password").val() != $("input#confrimPassword").val()){
           alert('确认密码不正确');
@@ -371,7 +371,7 @@
           type : 'POST',
           data : $('#joinForm').serialize()
         }).done(function(a, b, c) {
-          window.location = 'login.html';
+          //window.location = 'login.html';
           
         }).fail(function(xhr, textStatus, errorThrown) {
           alert(xhr.responseText);

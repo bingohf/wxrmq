@@ -13,5 +13,6 @@
 		<property name="headImgBase64" />
 		<property name="sex" />
 		<property name="friendsCount" />
+		<property name="mobile" />
 	</class>
 </hibernate-mapping> 

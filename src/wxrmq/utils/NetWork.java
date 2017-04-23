@@ -1,5 +1,7 @@
 package wxrmq.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -13,13 +15,19 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.org.apache.regexp.internal.recompile;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Request.Builder;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor.Logger;
+import okio.BufferedSink;
+import okio.Okio;
 import retrofit2.Retrofit;
 import retrofit2.http.HTTP;
 import sun.util.logging.resources.logging;
@@ -119,5 +127,20 @@ public class NetWork {
 		String domain = url.replace("https://", "");
 		int index = domain.indexOf("/");
 		return domain.substring(0, index);
+	}
+	
+	
+	public static String getImageBase64(String url,OkHttpClient client) throws IOException {
+		Builder requestBuilder = new Request.Builder().url(url);
+		Response response = client.newCall(requestBuilder.build()).execute();
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		String base64 ="";
+		if(response.isSuccessful()){
+			BufferedSink sink = Okio.buffer(Okio.sink(byteArrayOutputStream));
+			sink.writeAll(response.body().source());
+			sink.close();
+			base64 = Base64.encode(byteArrayOutputStream.toByteArray());
+		}
+		return base64;
 	}
 }

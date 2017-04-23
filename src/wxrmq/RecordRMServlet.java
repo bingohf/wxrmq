@@ -60,19 +60,18 @@ public class RecordRMServlet extends HttpServlet {
 		}
 		HttpSession sess = req.getSession(true);
 		Account account = (Account) sess.getAttribute("account");
-		account.setWx_unid(recordRmq.getCurUser().getUin());
+		//account.setWx_unid(123L);
 		
 		
-		ArrayList<WxUser_Tag> tags = createTagList(recordRmq.getCurUser().getUin(), 
+		ArrayList<WxUser_Tag> tags = createTagList(recordRmq.getCurUser().getWx_id(), 
 				recordRmq.getMemberList());
 		
 		SessionFactory dbfactory = RmqDB.getDBFactory();
 		Session session = dbfactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try{
-			Query query=session.createQuery("delete WxUser_Tag s where s.unid=" + recordRmq.getCurUser().getUin());
+			Query query=session.createQuery("delete WxUser_Tag s where s.unid=" + recordRmq.getCurUser().getWx_id());
 			query.executeUpdate();
-			
 
 			for(WxUser_Tag tag: tags){
 				session.saveOrUpdate(tag);

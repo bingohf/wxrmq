@@ -8,7 +8,6 @@
 		<id name="mobile">
 		</id>
 		<property name="password" />
-		<property name="wx_unid" />
 		
 	</class>
 </hibernate-mapping> 

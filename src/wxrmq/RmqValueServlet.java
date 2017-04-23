@@ -49,7 +49,7 @@ public class RmqValueServlet extends HttpServlet {
 		RmqValue rmqValue = new RmqValue();
 		Long wxid = 0L;
 		if (account != null) {
-			wxid = account.getWx_unid();
+			wxid = 123L;
 			rmqValue.setMobile(account.getMobile());
 		} else {
 			wxid = Long.parseLong(req.getParameter("wxid"));

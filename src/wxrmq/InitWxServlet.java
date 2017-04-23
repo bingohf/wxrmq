@@ -22,6 +22,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import wxrmq.data.remote.InitResponse;
 import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
@@ -61,8 +62,8 @@ public class InitWxServlet extends HttpServlet {
 		resp.getWriter().write(json);
 		resp.setStatus(response.code());
 		if(response.code() == 200){
-			WxUser wxUser = NetWork.getGson().fromJson(json, WxUser.class);
-			req.getSession(true).setAttribute("currentWx", wxUser);
+			InitResponse initResponse = NetWork.getGson().fromJson(json, InitResponse.class);
+			req.getSession(true).setAttribute("initResponse", initResponse);
 		}
 		
 

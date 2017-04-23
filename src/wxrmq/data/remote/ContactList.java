@@ -1,15 +1,16 @@
 package wxrmq.data.remote;
 
+import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
 
 public class ContactList {
-	private WxUser[] memberList;
+	private WxContact[] memberList;
 
-	public WxUser[] getMemberList() {
+	public WxContact[] getMemberList() {
 		return memberList;
 	}
 
-	public void setMemberList(WxUser[] memberList) {
+	public void setMemberList(WxContact[] memberList) {
 		this.memberList = memberList;
 	}
 

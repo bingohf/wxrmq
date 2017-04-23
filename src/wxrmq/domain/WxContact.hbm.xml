@@ -1,0 +1,19 @@
+<?xml version="1.0"?>  
+<!DOCTYPE hibernate-mapping PUBLIC   
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="wxrmq.domain.WxContact" table="wx_contact">
+ 		<composite-id>  
+            <!-- key-property标签表示哪一些属性对应复合主键 -->  
+            <key-property name="uin"></key-property>  
+            <key-property name="seq"></key-property>  
+        </composite-id>  
+		<property name="sex" />
+		<property name="city" />
+		<property name="province" />
+		<property name="signature" />
+		<property name="starFriend" />
+	</class>
+</hibernate-mapping> 

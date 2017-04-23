@@ -11,7 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.sun.net.httpserver.Headers;
 
@@ -23,18 +28,25 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import wxrmq.data.remote.ContactList;
+import wxrmq.data.remote.InitResponse;
 import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.Account;
+import wxrmq.domain.WxContact;
+import wxrmq.domain.WxUser;
+import wxrmq.domain.WxUser_Tag;
 import wxrmq.utils.NetWork;
 
 public class JoinServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("utf8");
+		req.setCharacterEncoding("UTF-8");
 		String mobile = req.getParameter("mobile");
 		String agreement = req.getParameter("agreement");
 		String password = req.getParameter("password");
+		String hostName = NetWork.getDomain(req.getParameter("redirect_uri"));
+		
 		String mobileCode = mobile + "_" + req.getParameter("mobileCode");
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		
@@ -59,12 +71,40 @@ public class JoinServlet extends HttpServlet {
 		try{
 			if (account == null){
 				account = Account.createAccount(mobile, password);
-				HttpSession session = req.getSession(true);
-				session.setAttribute("account", account);
+				req.getSession(true).setAttribute("account", account);
+		
+			InitResponse initResponse = (InitResponse) req.getSession().getAttribute("initResponse");
+			ContactList contactList= (ContactList) req.getSession().getAttribute("contactList");
+			initResponse.getUser().setMobile(account.getMobile());
+			SessionFactory dbfactory = RmqDB.getDBFactory();
+			Session session = dbfactory.openSession();
+			Transaction tx = session.beginTransaction();
+			try{
+				initResponse.getUser().setHeadImgBase64(NetWork.getImageBase64("https://" +hostName
+			+initResponse.getUser().getHeadImgUrl(), NetWork.buildClient(req)));
+				session.save(account);
+				Query query=session.createQuery("delete WxContact s where s.uin=" + initResponse.getUser().getUin());
+				query.executeUpdate();
+				session.saveOrUpdate(initResponse.getUser());
+				int i =0;
+				for(WxContact wxContact : contactList.getMemberList()){
+						wxContact.setSeq(i ++);
+						wxContact.setUin(initResponse.getUser().getUin());
+						session.save(wxContact);
+				
+				}
+			tx.commit();
+			}catch(HibernateException e){
+				e.printStackTrace();
+				tx.rollback();
+			}
+			session.close();
+			
 			}else{
 				 resp.setStatus(403);
 				 resp.getWriter().write("此用户已经存在");
 			}
+			
 		}catch(Exception e){
 		   resp.setStatus(500);
 		   resp.getWriter().write(e.getMessage());

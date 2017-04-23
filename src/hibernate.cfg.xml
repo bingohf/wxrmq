@@ -20,6 +20,7 @@
           
          <mapping resource="wxrmq/domain/User.hbm.xml"/> 
          <mapping resource="wxrmq/domain/Account.hbm.xml"/> 
+         <mapping resource="wxrmq/domain/WxContact.hbm.xml"/> 
          <mapping resource="wxrmq/domain/WxUser_Tag.hbm.xml"/> 
          <mapping resource="wxrmq/domain/SmSLog.hbm.xml"/> 
     </session-factory>  
