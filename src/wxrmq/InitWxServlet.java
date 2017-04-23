@@ -23,6 +23,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
 
 public class InitWxServlet extends HttpServlet {
@@ -34,9 +35,10 @@ public class InitWxServlet extends HttpServlet {
 		String wxsid = (String) session.getAttribute("wxsid");
 		OkHttpClient client = NetWork.buildClient(req);
 		String host = req.getHeader("host");
-
+		String redirectUrl = req.getParameter("redirect_url");
+		String hostName = NetWork.getDomain(redirectUrl);
 		Builder requestBuilder = new Request.Builder()
-				.url("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r=11600029842")
+				.url(String.format("https://%s/cgi-bin/mmwebwx-bin/webwxinit?r=11600029842",hostName))
 				.post(RequestBody.create(MediaType.parse("application/json;charset=UTF-8"),
 						"{\"BaseRequest\":{\"Uin\":\"xuin=" + wxuin + "\",\"Sid\":\"" + wxsid
 								+ "\",\"Skey\":\"\",\"DeviceID\":\"e095989469409771\"}}"));
@@ -55,8 +57,14 @@ public class InitWxServlet extends HttpServlet {
 		}
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().write(response.body().string());
+		String json = response.body().string();
+		resp.getWriter().write(json);
 		resp.setStatus(response.code());
+		if(response.code() == 200){
+			WxUser wxUser = NetWork.getGson().fromJson(json, WxUser.class);
+			req.getSession(true).setAttribute("currentWx", wxUser);
+		}
+		
 
 	}
 

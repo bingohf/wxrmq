@@ -126,3 +126,8 @@
 	float:left;
 	padding-left:10px;
 }
+
+img.qrcode{
+	width:240px;
+	height: 240px;
+}

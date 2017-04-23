@@ -41,13 +41,23 @@ import wxrmq.utils.NetWork;
 public class GetContactServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Builder requestBuilder = new Request.Builder().url("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?r=1489192482320&seq=0");
+		
+		String redirectUrl = req.getParameter("redirect_url");
+		String hostName = NetWork.getDomain(redirectUrl);
+		
+		Builder requestBuilder = new Request.Builder().url(String.format("https://%s/cgi-bin/mmwebwx-bin/webwxgetcontact?r=1489192482320&seq=0",hostName));
 		OkHttpClient client = NetWork.buildClient(req);
 		Response response = client.newCall(requestBuilder.build()).execute();
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		String json = response.body().string();
 		resp.setStatus(response.code());
-		resp.getWriter().write(response.body().string());
+		resp.getWriter().write(json);
+		
+		if(response.code() == 200){
+			ContactList contactList = NetWork.getGson().fromJson(json, ContactList.class);
+			req.getSession(true).setAttribute("contactList",contactList);
+		}
 	}
 
 }

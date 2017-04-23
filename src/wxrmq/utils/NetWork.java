@@ -114,4 +114,10 @@ public class NetWork {
 		response.setErrorMessage(e.getMessage());
 		return getGson().toJson(response);
 	}
+	
+	public static String getDomain(String url){
+		String domain = url.replace("https://", "");
+		int index = domain.indexOf("/");
+		return domain.substring(0, index);
+	}
 }

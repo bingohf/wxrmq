@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+  <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <script src="js/jquery-3.1.1.min.js"></script>
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="css/main.css">
+  <title>加入人脉圈</title></head>
+  
+  <body>
+    <div style="height:50px;width:100%">
+
+      <div style="float: right;margin-right: 13%;">
+        <p style="color: #eca95b; font-size: 14px; margin-left: 10px;    line-height: 50px; vertical-align: middle">
+          <a href="/StaticViews/Home/Help.html" target="">返回首页</a>
+        </p>
+      </div>
+    </div>
+
+    <div style="width:100%; line-height: 80px; text-align: center;padding:6px;background: #2ea97a;color:white">
+      <h2 style="">免费创建你的账号</h2>
+    </div>
+    <div style="width: 1000px; margin: 20px auto; height: 600px; border: 1px solid #e6e6e6;">
+
+      <div id="rootwizard">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="">
+              <ul style="width:100%">
+                <li style="width:33%"><a href="#tab1" data-toggle="tab" >1.扫码二维码</a></li>
+                <li style="width:33%"><a href="#tab2" data-toggle="tab" >2.微信价值评估</a></li>
+                <li style="width:33%"><a href="#tab3" data-toggle="tab">3.注册账号</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab1" style="text-align: center;">
+            <div style="margin: 30px auto 50px;display: inline-block;">
+              <h4>请使用微信扫描二维码加好友</h4>
+              <img class="qrcode" src="img/wx_qrcode.png"/>
+              <ul class="pager wizard">
+                <li  class="next"><button>下一步</button>  </li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="tab-pane" id="tab2" style="text-align: center;">
+            <div id ="layout_wx_login" class ="tab2_section" style="margin: 30px auto 50px;display: inline-block;">
+              <h4>打开微信，进入“扫一扫”<br/>扫码后在微信中点击“登录”</h4>
+              <img id="qrcode" class="qrcode"/><br/>
+              <span>申明：扫码登录，评估您微信号的价值，方便您接广告</span>
+
+            </div>
+            <div id ="layout_refresh" class ="tab2_section" style="margin: 30px auto 50px;display: inline-block;">
+              <span id ="layout_btn_refresh">二维码已经过期，请<a id ="a_refresh"href="#">刷新</a></span>
+            </div>
+            <img id ="img_loading" src="img/loading.gif" class ="tab2_section" style="margin: 30px auto 50px;display: inline-block;"/>
+            <div id ="layout_wx_value" class ="tab2_section" style="margin: 30px auto 50px;clear:both;">
+              <table style="width:100%;">
+                <tr>
+                  <td><label>好友数量</label> <span id ="contactCount"></span></td>
+                  <td><label>朋友圈报价</label> <span id ="quota_price"></span></td>
+                </tr>
+              </table>
+              <div id ="pie_sex" style="width:48%; height: 300px;float:left;"></div>
+              <div id ="pie_city" style="width:48%; height: 300px;float:left;"></div>
+              <br/><br/>
+              <ul id ="layout_qrcode_next"class="pager wizard" style="padding: 40px;clear: both;">
+                <li  class="next"><button>下一步</button>  </li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="tab-pane" id="tab3">
+            3
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="js/jquery.bootstrap.wizard.js"></script>
+    <script src="js/canvasjs.min.js"></script>
+    <script>
+
+
+      window.QRLogin = {
+        uuid: ''
+      };
+      window.Rmq = {
+        CurUser: {},
+        MemberList: []
+      };
+      $(document).ready(function() {
+        $('#rootwizard').bootstrapWizard({onTabClick: function(tab, navigation, index) {
+          return false;
+        }, onTabShow:function(tab, navigation, index){
+          if(index == 1){
+            showRefresh();
+            $('#a_refresh').click();
+          }
+        }});
+
+
+        var groupCount = function(list, key){
+          var hash = {};
+          for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            var keyValue = item[key];
+            var count = hash[keyValue];
+            if(count == null){
+              count = 0;
+            }
+            hash[keyValue]= ++count;
+          }
+          var result = new Array();
+          for(var p in hash){
+            result.push({label :p , y: hash[p]});
+          }
+          return result;
+        };
+
+        var renderPie = function(){
+          var i = 0;
+          while(i < Rmq.MemberList.length){
+            if(Rmq.MemberList[i].Sex ==0){
+              Rmq.MemberList.splice(i,1);
+            }else{
+              ++i;
+            }
+          }
+          $("#contactCount").html(Rmq.MemberList.length);
+          $("#quota_price").html(Rmq.MemberList.length / 40);
+
+          var pie_sexData = groupCount(Rmq.MemberList,'Sex');
+          for (var i = 0; i < pie_sexData.length; i++) {
+            pie_sexData[i].label =  pie_sexData[i].label == 1? '男':'女';
+          }
+          var chart = new CanvasJS.Chart("pie_sex",
+          {
+            theme: "theme2",
+            height: 300,
+            title:{
+              text: "性别分布"
+            },
+            data: [
+            {
+              type: "pie",
+              showInLegend: true,
+              legendText: "{label}",
+              dataPoints: pie_sexData
+            }
+            ]
+          });
+          chart.render();
+
+          var pie_cityData = groupCount(Rmq.MemberList, 'City');
+          var chart = new CanvasJS.Chart("pie_city",
+          {
+            theme: "theme2",
+            height: 300,
+            title:{
+              text: "地区分布"
+            },
+            data: [
+            {
+              type: "pie",
+              showInLegend: true,
+              legendText: "{label}",
+              dataPoints: pie_cityData
+            }
+            ]
+          });
+          chart.render();
+
+        };
+        var showRefresh = function(){
+          $(".tab2_section").hide();
+          $("#layout_refresh").show();
+      };
+      $('#a_refresh').click(function(){
+        $(".tab2_section").hide();
+        $("#img_loading").show();
+        $("#layout_refresh").hide();
+        reset();
+      });
+
+      var init = function() {
+        $.get("initWx",{
+          redirect_url: redirect_uri
+        }, function(data, status) {
+          Rmq.CurUser = data.User;
+          getContact();
+        }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+          debugger;
+        });
+      }
+
+      var login = function() {
+        console.log(redirect_uri);
+        $.get("loginWx", {
+          redirect_url: redirect_uri
+        }, function(data, status) {
+          $(".tab2_section").hide();
+          $("#img_loading").show();
+          init();
+        });
+      }
+
+      var getContact = function() {
+        $.ajax({
+          type: "get",
+          url: "getContact",
+          data:{ redirect_url: redirect_uri},
+          contentType: "application/json",
+          dataType: "json"
+        }).done(function(data) {
+          window.Rmq.MemberList = data.MemberList;
+          $(".tab2_section").hide();
+          $("#layout_wx_value").show();
+          renderPie();
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+
+        });
+      }
+      var reset = function() {
+        var p = $.get("uuid").done(function(data) {
+          eval(data);
+          $("#qrcode").attr("src",
+            "https://login.weixin.qq.com/qrcode/" + QRLogin.uuid);
+          $(".tab2_section").hide();
+          $("#layout_wx_login").show();
+          listenScan();
+        });
+        var listenScan = function() {
+          $.get("listenState", {
+            uuid: QRLogin.uuid
+          }, function(data, status) {
+            eval(data);
+            if (code == 201) {
+              listenScan();
+            } else if (code == 200) {
+              login();
+            } else if (code == 408) {
+              listenScan();
+            } else if (code = 400) {
+              showRefresh();
+            }
+          });
+        }
+      }
+
+
+    });
+  </script>
+</body>
+
+</html>

@@ -36,6 +36,8 @@ public class LoginWxServlet extends HttpServlet {
 			String value = req.getHeader(name);
 			// requestBuilder.addHeader(name, value);
 		}
+		
+		String domainName = NetWork.getDomain(redirectUrl);
 	//	requestBuilder.header("host", "wx.qq.com").header("Referer", "https://wx.qq.com/").header("User-Agent",
 	//			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36");
 		//requestBuilder.header("Cookie", null);
@@ -46,7 +48,7 @@ public class LoginWxServlet extends HttpServlet {
 			List<String> values = headers.values(name);
 			for(String value:values){
 				if (name.equals("Set-Cookie")){
-					value = value.replace("Domain=wx.qq.com;", "Domain=" +host +";");
+					value = value.replace(String.format("Domain=%s;",domainName), "Domain=" +host +";");
 				}
 				resp.addHeader(name, value);
 			}
@@ -55,5 +57,7 @@ public class LoginWxServlet extends HttpServlet {
 		resp.setStatus(response.code());
 
 	}
+	
+
 
 }
