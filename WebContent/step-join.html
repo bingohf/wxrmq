@@ -109,8 +109,8 @@
                 <dd>
                   <div class="input-group">
                     <input autocapitalize="off" autofocus="autofocus" class="form-control" size="30" type="text" name="validateCode" />
-                    <span class="input-group-btn">
-                      <img src="validateCode?v=xxx" id ="img_validationCode"/>
+                    <span class="input-group-btn" class="validationCode">
+                      <img src="validateCode?v=xxx" id="img_validationCode"/> <a id ="btn_validationCode" href="#">换一张</a>
                     </span>
                   </div>
                   <p class="note"></p>
@@ -149,9 +149,8 @@
                   <p class="note"></p>
                 </dd>
               </dl>
-
+              <input type="checkbox" aria-label="..." name ="agreement" value="Y"/>接受<a href="agreement.html" target="_blank">协议</a></p>
             </form>
-            <input type="checkbox" aria-label="..." />接受协议</p>
             <button class="btn btn-primary" id="signup_button" data-disable-with="创建" data-loading-text="创建中...">创建个人账号</button>
           </div>
         </div>
@@ -179,6 +178,8 @@
           if (index == 1) {
             showRefresh();
             $('#a_refresh').click();
+          } else if (index == 2){
+            $(".validationCode").click();
           }
         }
       });
@@ -332,6 +333,55 @@
       }
 
 
+      //login
+      $(".validationCode").click(function(){
+        $("#img_validationCode").attr("src", "validateCode?v=" + (new Date().getTime()));
+      });
+
+      $("#btn_mobile_code").click(function(){
+        var $btn = $(this);
+        $btn.button('loading');
+        $.ajax({
+          url : 'mobileValidationCode',
+          type : 'POST',
+          data : $('#joinForm').serialize()
+        }).done(function(a, b, c) {
+          $(".validationCode").click();
+          alert(a);
+        }).fail(function(xhr, textStatus, errorThrown) {
+          alert(xhr.responseText);
+          console.log(xhr);
+          console.log(textStatus);
+          console.log(errorThrown);
+        }).always(function(){
+          $btn.button("reset");
+        });
+      });
+
+
+      $("#signup_button").click(function() {
+        var $btn = $(this);
+        if($("#password").val() != $("input#confrimPassword").val()){
+          alert('确认密码不正确');
+          return;
+        }
+        $btn.button('loading');
+        $.ajax({
+          url : 'join',
+          type : 'POST',
+          data : $('#joinForm').serialize()
+        }).done(function(a, b, c) {
+          window.location = 'login.html';
+          
+        }).fail(function(xhr, textStatus, errorThrown) {
+          alert(xhr.responseText);
+          console.log(xhr);
+          console.log(textStatus);
+          console.log(errorThrown);
+        }).always(function(){
+          $btn.button("reset");
+        });
+      });
     });
   </script>
 </body>

@@ -33,12 +33,19 @@ public class JoinServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf8");
 		String mobile = req.getParameter("mobile");
+		String agreement = req.getParameter("agreement");
 		String password = req.getParameter("password");
 		String mobileCode = mobile + "_" + req.getParameter("mobileCode");
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
+		
+		if (agreement == null || agreement.isEmpty()){
+			 resp.setStatus(403);
+			 resp.getWriter().write("请接收协议");
+			return;
+		}
 		if(mobile.isEmpty() || password.isEmpty()){
 			 resp.setStatus(403);
-			 resp.getWriter().write("用户名，密码不合法");
+			 resp.getWriter().write("手机号码或密码不合法");
 			return;
 		}
 		if(!mobileCode.equals(req.getSession().getAttribute("mobileCode"))){

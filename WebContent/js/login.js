@@ -30,7 +30,5 @@ $(document).ready(function() {
 		}).always(function(){
 			$btn.button("reset");
 		});
-		
-
 	});
 });

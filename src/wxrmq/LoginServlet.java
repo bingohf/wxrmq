@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 			session.setAttribute("account", account);
 		}else {
 			resp.setStatus(401);
-			resp.getWriter().write("用户名密码不正确");
+			resp.getWriter().write("手机号码，密码不正确");
 		}
 	}
 	
