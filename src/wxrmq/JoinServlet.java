@@ -85,13 +85,13 @@ public class JoinServlet extends HttpServlet {
 				session.save(account);
 				Query query=session.createQuery("delete WxContact s where s.uin=" + initResponse.getUser().getUin());
 				query.executeUpdate();
+				initResponse.getUser().setFriendsCount(contactList.getMemberList().length);
 				session.saveOrUpdate(initResponse.getUser());
 				int i =0;
 				for(WxContact wxContact : contactList.getMemberList()){
 						wxContact.setSeq(i ++);
 						wxContact.setUin(initResponse.getUser().getUin());
 						session.save(wxContact);
-				
 				}
 			tx.commit();
 			}catch(HibernateException e){

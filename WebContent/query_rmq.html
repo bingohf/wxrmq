@@ -2,32 +2,239 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-<link rel="stylesheet"
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+	<link rel="stylesheet"
 	href="bootstrap/3.3.7/css/bootstrap-theme.min.css">
-<script src="js/jquery-3.1.1.min.js"></script>
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/main.css">
-<script src="js/query_rmq.js"></script>
-<title>人脉圈 -- 查询</title>
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="js/jquery.tmpl.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/main.css">
+	<style type="text/css">
+		.query_row{
+			border-top: 1px dashed #dedede;
+			overflow: hidden;
+			position: relative;
+			width: 100%;
+		}
+		.row-first{
+			border-top:none;
+		}
+		.query_row .head{
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			width:90px;
+			height: 100%;
+			padding: 9px;
+			background: #eeeeee;
+		}
+		.query_row .body{
+			padding: 0px 10px 0px 100px;
+		}
+		.body .item{
+			float:left;
+			padding: 9px 30px 9px 0px;
+		}
+		.body .item.any{
+			color:red;
+		}
+		.item.active a,.item.active select{
+			color: #fff;
+			background-color: #ff5e89;
+		}
+		.filter{
+			display: none;
+		}
+		.data_row{
+
+		}
+		.item img{
+			width: 80px;
+			height:80px;
+		}
+		.data_row .head{
+
+		}
+		.data_row .item{
+			float: left;
+			padding: 5px 80px 5px 0px;
+			height: 90px;
+			display: table;
+		}
+
+		.data_row .item>div{
+			display: table-cell;
+			vertical-align:middle;
+		}
+		.itemLabel{
+			color:blue;
+		}
+	</style>
+	<title>人脉圈 -- 查询</title>
 </head>
 
 <body class="home">
-	<div class="home_container">
-	   <div style="width :600px"> 
-	      <input type="text" class="form-control" id="input_query" 
-			   placeholder="输入筛选条件 例如：合肥"> 
-		<br/>	  
-		<p id ="rmqList" style="">
-		   <div class="list_item">
-		   </div>
-		</p>  
+	<div style="width:1000px;margin: 10px auto">
+		<div style="border: 1px solid #e8e8e8;">
+			<div class="query_row row-first">
+				<div class="head">报价</div>
+				<div class ="body">
+					<input class ="filter" name="quota"/>
+					<span class="item any active"><a href="#" qValue="">不限</a></span>
+					<span class="item"><a href="#" qValue="quota <= 20">20元以下</a></span>
+					<span class="item"><a  href="#"  qValue="quota >=20 and quota <= 50" >20-50元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=50 and quota <= 80" >50-80元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=80 and quota <= 100" >80-100元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=100 and quota <= 120" >100-120元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=120 and quota <= 150" >120-150元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=150 and quota <= 180" >150-180元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=180 and quota <= 250" >180-250元</a></span>
+					<span class="item"><a  href="#" qValue="quota >=250" >250以上元</a></span>
+				</div>
+				<div class="foot"></div>
+			</div>
+			<div class="query_row">
+				<div class="head">好友数</div>
+				<div class ="body">
+					<input class ="filter" name="friendsCount"/>
+					<span class="item any active"><a href="#" qValue="">不限</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount <= 150" >150以下</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=150 and friendsCount <= 300" >150-300</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=300 and friendsCount <= 500">300-500</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=500 and friendsCount <= 800">500-800</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=800 and friendsCount <= 1000">800-1000</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=1000 and friendsCount <= 1500">1000-1500</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=1500 and friendsCount <= 2500">1500-2500</a></span>
+					<span class="item"><a  href="#" qValue="friendsCount >=2500 ">2500以上</a></span>
+				</div>
+				<div class="foot"></div>
+			</div>
+
+			<div class="query_row">
+				<div class="head">地域</div>
+				<div class ="body">
+					<input class ="filter" name="city"/>
+					<span class="item any active"><a href="#" qValue="">不限</a></span>
+					<span class="item"><a  href="#" qValue="city ='合肥' " >合肥</a></span>
+					<span class="item"><a  href="#" qValue="city ='北京' ">北京</a></span>
+					<span class="item"><a  href="#" qValue="city ='上海' ">上海</a></span>
+					<span class="item"><a  href="#" qValue="city ='广州' ">广州</a></span>
+					<span class="item"><a  href="#" qValue="city ='深圳' ">深圳</a></span>
+					<span class="item"><a  href="#" qValue="city ='杭州' ">杭州</a></span>
+					<span class="item"><a  href="#" qValue="city ='重庆' ">重庆</a></span>
+					<span class="item"><a  href="#" qValue="city ='南京' ">南京</a></span>
+					<span class="item"><a  href="#" qValue="city ='武汉' ">武汉</a></span>
+					<span class="item"> <select>
+						<option value="">请选择</option>
+						<option value="city ='芜湖'">芜湖</option>
+						<option value="city ='淮南'">淮南</option>
+						<option value="city ='无锡'">无锡</option>
+					</select></span>
+
+				</div>
+				<div class="foot"></div>
+			</div>
+			<div class="query_row">
+				<div class="head">行业</div>
+				<div class ="body">
+					<input class ="filter" name="interest"/>
+					<span class="item any active"><a href="#" qValue="">不限</a></span>
+					<span class="item"><a  href="#"  qValue="interest ='电商' or interest ='微商' ">电商/微商</a></span>
+					<span class="item"><a  href="#" qValue="interest ='互联网' ">互联网</a></span>
+					<span class="item"><a  href="#" qValue="interest ='传媒' or interest ='营销' ">传媒/营销</a></span>
+					<span class="item"><a  href="#" qValue="interest ='金融' or interest ='财经' ">金融/财经</a></span>
+					<span class="item"><a  href="#" qValue="interest ='时尚'">时尚</a></span>
+					<span class="item"><a  href="#" qValue="interest ='母婴'">母婴</a></span>
+					<span class="item"><a  href="#" qValue="interest ='文娱' ">文娱</a></span>
+					<span class="item"><a  href="#" qValue="interest ='旅游' or interest ='酒店' ">旅游/酒店</a></span>
+					<span class="item"><a  href="#" qValue="interest ='房地产'">房地产</a></span>
+					<span class="item"><a  href="#" qValue="interest ='游戏动漫'">游戏动漫</a></span>
+					<span class="item"><a  href="#" qValue="interest ='教育' ">教育</a></span>
+					<span class="item"><a  href="#" qValue="interest ='学生'">学生</a></span>
+				</div>
+				<div class="foot"></div>
+			</div>
+
+
+		</div>
+		<div style="margin-top: 20px;">
+			<div id="div_loading" style="text-align: center;"><img src="img/loading.gif"/></div>
+			<div id ="div_list">
+
+			</div>
 		</div>
 	</div>
+
+	<script id="dataTmpl" type="text/x-jquery-tmpl">
+				<div class="data_row">
+					<div class="item head">
+						<img class ="" src="img/wx_qrcode.png"/>
+						<span style="margin-left: 10px">昵称</span>
+					</div>
+					<span class="item">
+						<div>
+							<span class="itemLabel">报价</span>
+							<br/>
+							￥111
+						</div>
+					</span>
+					<span class="item">
+						<div>
+							<span class="itemLabel">好友数</span>
+							<br/>
+							111
+						</div>
+					</span>
+					<span class="item">
+						<div>
+							22岁<br/>
+							北京
+						</div>
+					</span>
+					<span class="item">
+						<div>
+							<span class="itemLabel">行业</span>
+							<br/>
+							计算机
+						</div>
+					</span>
+					<div style="clear: both;"></div>
+				</div>
+	</script>
+	<script>
+		$(document).ready(function() {
+			$(".query_row a").click(function(){
+				var parent = $(this).parents('.query_row');
+				parent.find("input").val($(this).attr("qValue"));
+				parent.find(".item").removeClass("active");
+				$(this).parent(".item").addClass("active");
+				parent.find("select").val('');
+			});
+
+			$(".query_row select").change(function(){
+				var parent = $(this).parents('.query_row');
+				parent.find(".item").removeClass("active");
+				var val = $(this).val();
+				if(val ==''){
+					parent.find(".item.any").addClass("active");
+				}else{
+					$(this).parent(".item").addClass("active");
+				}
+				parent.find("input").val(val);
+			});
+
+			var movies = [
+				{ Name: "The Red Violin", ReleaseYear: "1998" },
+				{ Name: "Eyes Wide Shut", ReleaseYear: "1999" },
+				{ Name: "The Inheritance", ReleaseYear: "1976" }
+			];
+			$( "#dataTmpl" ).tmpl( movies).appendTo( "#div_list" );
+		});
+	</script>
 </body>
 
 </html>
