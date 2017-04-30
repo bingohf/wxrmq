@@ -81,7 +81,10 @@
 		<servlet-name>MobileValidationCodeServlet</servlet-name>
 		<servlet-class>wxrmq.MobileValidationCodeServlet</servlet-class>
 	</servlet>			
-	
+	<servlet>
+		<servlet-name>GetWxUserInfoServlet</servlet-name>
+		<servlet-class>wxrmq.GetWxUserInfoServlet</servlet-class>
+	</servlet>	
 	
 	<servlet-mapping>
 		<servlet-name>uuid</servlet-name>
@@ -143,6 +146,11 @@
 	<servlet-mapping>
 		<servlet-name>MobileValidationCodeServlet</servlet-name>
 		<url-pattern>/mobileValidationCode</url-pattern>
+	</servlet-mapping>	
+	
+	<servlet-mapping>
+		<servlet-name>GetWxUserInfoServlet</servlet-name>
+		<url-pattern>/getwxUserInfo</url-pattern>
 	</servlet-mapping>	
 	
 	
