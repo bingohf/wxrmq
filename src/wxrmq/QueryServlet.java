@@ -55,13 +55,24 @@ public class QueryServlet extends HttpServlet {
 		String city = req.getParameter("city");
 		String interest = req.getParameter("interest");
 		
-	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota from WxUser a where 1=1 ";
+	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota,city,age from WxUser a where 1=1 ";
 	    if(!TextUtils.isEmpty(quota)){
 	    	sql += " and " + quota;
 	    }
 	
 	    if(!TextUtils.isEmpty(interest)){
 	    	sql += " and  uin in (select uin from WxUser_Tag where " + interest +")" ;
+	    }
+	    if(!TextUtils.isEmpty(city)){
+	    	if (!TextUtils.isEmpty(friendsCount)){
+	    		sql += " and  exists ( select 1 from (  select uin ,count(1) friendsCount from wx_contact b where  " + city +" group by uin) c where  c.uin = a.uin and " + friendsCount+")" ;
+	    	} else{
+	    		sql += " and  exists ( select 1 from (  select uin, count(1) friendsCount from wx_contact b where  " + city +" group by uin) c  where c.uin = a.uin)" ;
+	    	}
+	    }else{
+	    	if (!TextUtils.isEmpty(friendsCount)){
+	    		sql += " and  " + friendsCount ;
+	    	}
 	    }
 	    
 
@@ -83,6 +94,8 @@ public class QueryServlet extends HttpServlet {
 			if(row[5] != null){
 				item.setQuota(((BigDecimal)row[5]).floatValue());
 			}
+			item.setCity((String)row[6]);
+			item.setAge((Integer)row[7]);
 			queryReturn.getItems().add(item);
 		}
 

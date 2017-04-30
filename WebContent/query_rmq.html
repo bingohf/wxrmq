@@ -124,8 +124,8 @@
 						<input class ="filter" name="city"/>
 						<span class="item any active"><a href="#" qValue="">不限</a></span>
 						<span class="item"><a  href="#" qValue="city ='合肥' " >合肥</a></span>
-						<span class="item"><a  href="#" qValue="city ='北京' ">北京</a></span>
-						<span class="item"><a  href="#" qValue="city ='上海' ">上海</a></span>
+						<span class="item"><a  href="#" qValue="province ='北京' ">北京</a></span>
+						<span class="item"><a  href="#" qValue="province ='上海' ">上海</a></span>
 						<span class="item"><a  href="#" qValue="city ='广州' ">广州</a></span>
 						<span class="item"><a  href="#" qValue="city ='深圳' ">深圳</a></span>
 						<span class="item"><a  href="#" qValue="city ='杭州' ">杭州</a></span>
@@ -194,8 +194,8 @@
 					</span>
 					<span class="item">
 						<div>
-							22岁<br/>
-							北京
+							${typeof Age == 'undefined' ? '--': Age}岁<br/>
+							${typeof City == 'undefined' ? '--': City}
 						</div>
 					</span>
 					<span class="item">

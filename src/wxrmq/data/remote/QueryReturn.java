@@ -25,6 +25,8 @@ public class QueryReturn {
 		private int sex;
 		private int FriendsCount;
 		private Float quota;
+		private Integer age;
+		private String city;
 		public String getNickName() {
 			return nickName;
 		}
@@ -60,6 +62,18 @@ public class QueryReturn {
 		}
 		public void setQuota(Float quota) {
 			this.quota = quota;
+		}
+		public String getCity() {
+			return city;
+		}
+		public void setCity(String city) {
+			this.city = city;
+		}
+		public Integer getAge() {
+			return age;
+		}
+		public void setAge(Integer age) {
+			this.age = age;
 		}
 		private String headImgBase64;
 	}
