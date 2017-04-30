@@ -2,6 +2,7 @@ package wxrmq;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Enumeration;
 import java.util.List;
@@ -42,33 +43,46 @@ import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.Account;
 import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
+import wxrmq.utils.TextUtils;
 
 public class QueryServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
 		req.setCharacterEncoding("UTF-8");
-		String query = req.getParameter("query");
+		String quota = req.getParameter("quota");
+		String friendsCount = req.getParameter("friendsCount");
+		String city = req.getParameter("city");
+		String interest = req.getParameter("interest");
+		
+	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota from WxUser a where 1=1 ";
+	    if(!TextUtils.isEmpty(quota)){
+	    	sql += " and " + quota;
+	    }
+	
+	    if(!TextUtils.isEmpty(interest)){
+	    	sql += " and  uin in (select uin from WxUser_Tag where " + interest +")" ;
+	    }
+	    
+
+		
 		int start = 0;
 		int count = 100;
 		resp.setCharacterEncoding("UTF-8");
 		RmqValue rmqValue = new RmqValue();
-		List<Object[]> result = RmqDB.sqlQuery(
-				" select a.uin, a.NickName,a.sex, b.count,a.FriendsCount, a.headImgBase64 "
-               + " from WxUser a join (select  unid, count from WxUser_Tag where  label =?) b on b.unid= a.uin "
-               + "  order by b.count desc, a.FriendsCount ",
-               query);
+		List<Object[]> result = RmqDB.sqlQuery(sql);
 		QueryReturn queryReturn = new QueryReturn();
 		
 		for (Object[] row : result) {
 			QueryReturn.Item item = new QueryReturn.Item();
-			item.setUnid(((BigInteger)row[0]).longValue());
+			item.setUin(((BigInteger)row[0]).longValue());
 			item.setNickName((String)row[1]);
-			item.setSex(((BigInteger)row[2]).intValue());
-			item.setTagCount(((BigInteger)row[3]).intValue());
+			item.setHeadImgBase64((String)row[2]);
+			item.setSex(((BigInteger)row[3]).intValue());
 			item.setFriendsCount(((BigInteger)row[4]).intValue());
-			item.setHeadImgBase64((String)row[5]);
-			item.setQueryTag(query);
+			if(row[5] != null){
+				item.setQuota(((BigDecimal)row[5]).floatValue());
+			}
 			queryReturn.getItems().add(item);
 		}
 

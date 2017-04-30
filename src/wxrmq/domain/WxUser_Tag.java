@@ -1,25 +1,19 @@
 package wxrmq.domain;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class WxUser_Tag {
-	private String id;
-	private Long unid;
+public class WxUser_Tag implements Serializable {
+	
+	public static final int TYPE_INTEREST = 0;
+	public static final int TYPE_AGE = 1;
+	
+	private Long uin;
 	private int type;
 	private String label;
 	private int count;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public Long getUnid() {
-		return unid;
-	}
-	public void setUnid(Long unid) {
-		this.unid = unid;
-	}
+	
+
 	public int getType() {
 		return type;
 	}
@@ -37,6 +31,12 @@ public class WxUser_Tag {
 	}
 	public void setCount(int count) {
 		this.count = count;
+	}
+	public Long getUin() {
+		return uin;
+	}
+	public void setUin(Long uin) {
+		this.uin = uin;
 	}
 
 

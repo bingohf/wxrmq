@@ -5,11 +5,12 @@
 
 <hibernate-mapping>
 	<class name="wxrmq.domain.WxUser_Tag" table="wxuser_tag">
-		<id name="id">
-		</id>
-		<property name="unid" />
-		<property name="type" />
-		<property name="label" />
+ 		<composite-id>  
+            <!-- key-property标签表示哪一些属性对应复合主键 -->  
+            <key-property name="uin"></key-property>  
+            <key-property name="type"></key-property>  
+            <key-property name="label"></key-property>  
+        </composite-id>  
 		<property name="count" />
 	</class>
 </hibernate-mapping> 
