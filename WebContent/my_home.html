@@ -2,57 +2,212 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-<link rel="stylesheet"
-	href="bootstrap/3.3.7/css/bootstrap-theme.min.css">
-<script src="js/jquery-3.1.1.min.js"></script>
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/main.css">
-<script src="js/my_home_wechat.js"></script>
-<title>人脉圈</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+	<link rel="stylesheet"
+	href="bootstrap/3.3.7/css/bootstrap-theme.min.css1">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/bootstrap-modal.css1">
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="js/jquery.tmpl.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-modal.js1"></script>
+	
+	<style type="text/css">
+		.navigation{
+			background-color: #363a47;
+			height: 100%;
+			width: 240px;
+			color:white;
+			position: fixed;
+			font-size: 16px;
+			top: 0;
+			left: 0;
+		}
+		.main-content{
+			margin-left: 240px;
+			background-color: rgb(239, 240, 244);
+		}
+		.navigation ul{
+			list-style: none;
+		}
+		footer {
+			text-align: center;
+			background: #363a47;
+			padding: 16px;
+			color: #7a7676;
+			font-size: 12px;
+			position: static;
+			bottom: 0;
+			width: 100%;
+			border-top: 1px solid #eff0f4;
+		}
+		.main-body{
+			padding: 10px;
+		}
+		.panel{
+			border: 1px solid #d0d0d0;
+			padding: 15px 20px 15px 20px;
+		}
+		.table_wechat th, .table_wechat td{
+			text-align: center;
+		}
+		img.head{
+			width:80px;
+			height:80px;
+		}
+
+	</style>
+
+	<title>人脉圈</title>
 </head>
 
-<body class="home">
-	<div class="home_container">
-		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation" class="active"><a href="#">我的微信</a></li>
-			<li role="presentation"><a href="#">订单</a></li>
-		</ul>
+<body>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" 
+					aria-hidden="true">×
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					更新个人信息
+				</h4>
+			</div>
+			<div class="modal-body form-horizontal">
 
-		<div class="content" style="float: left; margin: 10px;">
-			<div class="tab1">
-				<div>
-					<div class="form-group">
-						<label class="control-label">手机号码</label>
-						 <input readonly id ="input_mobile"
-							class="form-control" type="text"  />
-					</div>
-					<div class="form-group">
-						<label class="control-label">报价</label>
-						 <input id ="quotedPrice"
-							class="form-control" type="number" placeholder="请输入密码" />
-					</div>
-					
-					<div class="form-group">
-						<a id="link_detail" style="display:none">好友分布状况</a>
-					</div>
-										
-					<div class="form-group">
-						<label class="control-label">扫码更新你的人脉圈</label>
-						<img id="qrcode" src="" height=200 width=200 />
+				<div class="form-group">
+					<label class="col-lg-3 col-sm-3 control-label">报价</label>
+					<div class="col-lg-7">
+						<input class="form-control" data-val="true" data-val-number="字段 Age 必须是一个数字。" id="Age" name="Age" type="text" value="18">
 					</div>
 				</div>
-				
-
-				
+				<div class="form-group">
+					<label class="col-lg-3 col-sm-3 control-label">年龄</label>
+					<div class="col-lg-7">
+						<input class="form-control" data-val="true" data-val-number="字段 Age 必须是一个数字。" id="Age" name="Age" type="text" value="18">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-sm-3 control-label">行业/职业</label>
+					<div class="row">
+						<div class="col-lg-6">
+							<select class="form-control  m-bot15 valid" id="Job" name="Job"><option value=""></option>
+								<option value="学生">学生</option>
+								<option value="白领">白领</option>
+								<option value="蓝领">蓝领</option>
+								<option value="模特">模特</option>
+								<option value="微商">微商</option>
+								<option value="自媒体">自媒体</option>
+								<option value="企业家">企业家</option>
+								<option value="美妆达人">美妆达人</option>
+								<option value="网络红人">网络红人</option>
+								<option value="个体商户">个体商户</option>
+								<option value="自由职业">自由职业</option>
+								<option value="IT互联网">IT互联网</option>
+								<option value="其他">其他</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+		            <label class="col-lg-3 col-sm-3 control-label">朋友圈描述</label>
+		            <div class="col-lg-7">
+		                <textarea class="form-control" cols="35" id="FriendDescription" name="FriendDescription" rows="5"></textarea>
+		            </div>
+	      	  </div>
 			</div>
-			<div class="tab2"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" 
+				data-dismiss="modal">取消
+			</button>
+			<button type="button" class="btn btn-primary">
+				提交更改
+			</button>
 		</div>
+	</div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<section>
+	<div class="navigation">
+		<br/>
+		<ul>
+			<li>微信账号管理</li>
+		</ul>
 	</div>
+	<div class="main-content">
+		<div class="main-body">
+			<section class="panel">
+				<table class="table_wechat">
+					<thead>
+						<tr style=" border-bottom-width:0px;">
+							<th style="width: 40px; text-align: center; vertical-align: middle;">
+								<input type="checkbox" id="chkBoxAll" name="chkBoxAll">
+							</th>
+							<th style="width: 300px; ">微信账号</th>
+							<th style="width: 50px; ">账号类型</th>
+							<th style="width: 150px; ">好友数</th>
+							<th style="width: 150px; ">报价</th>
+							<th style="width: 150px; ">订单数</th>
+							<th style="width: 150px; ">成交数</th>
+							<th style="width: 160px;  ">操作</th>
+							<th nowarp=""> </th>
+						</tr>
+					</thead>
+					<tbody id ="div_list">
+					</tbody>
+				</table>
+			</section>
+		</div>
+
+		<footer>
+			版权所有 聚推宝
+		</footer>
+	</div>
+</section>
+</div>
+
+	<script id="dataTmpl" type="text/x-jquery-tmpl">
+					<tr>
+						<td><input type="checkbox" name="xx"/></td>
+						<td><img class ="head" src="data:image/png;base64,${HeadImgBase64}"/>
+												<a class ="nickname" href ="wx.html?wxid=${Uin}" target ="_blank" title="${NickName}">${NickName}</a>				
+						</div></td>
+						<td>wechat</td>
+						<td>${FriendsCount}</td>
+						<td>--</td>
+						<td>--</td>
+						<td>--</td>
+						<td><button class="btn_update" disabled>个人信息</button></td>
+					</tr>
+	</script>
+
+<script type="text/javascript">
+	$(window).resize(function(){
+		$(".main-body").css('min-height', ($(window).height() - $("footer").outerHeight()) + 'px');
+	});
+	$(window).resize();
+	$(".btn_update").click(function(){
+		$('#myModal').modal({
+			keyboard: true
+		});
+	});
+	$.ajax({
+		url : 'getWxList',
+		type : 'GET',
+		dataType: "json"
+	}).done(function(a, b, c) {
+		$("#dataTmpl").tmpl(a).appendTo("#div_list");			
+	}).fail(function(xhr, textStatus, errorThrown) {
+		alert(xhr.responseText);
+	}).always(function(){
+		$("#div_loading").hide();
+	});
+</script>
 </body>
 
 </html>

@@ -56,16 +56,15 @@
 			width: 80px;
 			height:80px;
 		}
-		.data_row .head{
-
-		}
 		.data_row .item{
 			float: left;
 			padding: 5px 80px 5px 0px;
 			height: 90px;
 			display: table;
 		}
-
+		.data_row .head{
+			padding: 5px 10px 5px 0px;
+		}
 		.data_row .item>div{
 			display: table-cell;
 			vertical-align:middle;
@@ -75,6 +74,13 @@
 		}
 		.data_row:hover{
 			background-color:rgba(128, 128, 128, 0.13);
+		}
+		.nickname {
+    		white-space: nowrap;
+    		width: 100px;
+    		overflow: hidden;
+    		display: block;
+    		text-overflow: ellipsis;
 		}
 	</style>
 	<title>人脉圈 -- 查询</title>
@@ -147,18 +153,18 @@
 					<div class ="body">
 						<input class ="filter" name="interest"/>
 						<span class="item any active"><a href="#" qValue="">不限</a></span>
-						<span class="item"><a  href="#"  qValue="interest ='电商' or interest ='微商' ">电商/微商</a></span>
-						<span class="item"><a  href="#" qValue="interest ='互联网' ">互联网</a></span>
-						<span class="item"><a  href="#" qValue="interest ='传媒' or interest ='营销' ">传媒/营销</a></span>
-						<span class="item"><a  href="#" qValue="interest ='金融' or interest ='财经' ">金融/财经</a></span>
-						<span class="item"><a  href="#" qValue="interest ='时尚'">时尚</a></span>
-						<span class="item"><a  href="#" qValue="interest ='母婴'">母婴</a></span>
-						<span class="item"><a  href="#" qValue="interest ='文娱' ">文娱</a></span>
-						<span class="item"><a  href="#" qValue="interest ='旅游' or interest ='酒店' ">旅游/酒店</a></span>
-						<span class="item"><a  href="#" qValue="interest ='房地产'">房地产</a></span>
-						<span class="item"><a  href="#" qValue="interest ='游戏动漫'">游戏动漫</a></span>
-						<span class="item"><a  href="#" qValue="interest ='教育' ">教育</a></span>
-						<span class="item"><a  href="#" qValue="interest ='学生'">学生</a></span>
+						<span class="item"><a  href="#"  qValue="label in('电商','微商') ">电商/微商</a></span>
+						<span class="item"><a  href="#" qValue="label ='互联网' ">互联网</a></span>
+						<span class="item"><a  href="#" qValue="label in('传媒' ,'营销') ">传媒/营销</a></span>
+						<span class="item"><a  href="#" qValue="label in('金融','财经') ">金融/财经</a></span>
+						<span class="item"><a  href="#" qValue="label ='时尚'">时尚</a></span>
+						<span class="item"><a  href="#" qValue="label ='母婴'">母婴</a></span>
+						<span class="item"><a  href="#" qValue="label ='文娱' ">文娱</a></span>
+						<span class="item"><a  href="#" qValue="label in('旅游', '酒店')">旅游/酒店</a></span>
+						<span class="item"><a  href="#" qValue="label ='房地产'">房地产</a></span>
+						<span class="item"><a  href="#" qValue="label ='游戏动漫'">游戏动漫</a></span>
+						<span class="item"><a  href="#" qValue="label ='教育' ">教育</a></span>
+						<span class="item"><a  href="#" qValue="label ='学生'">学生</a></span>
 					</div>
 					<div class="foot"></div>
 				</div>
@@ -176,8 +182,12 @@
 				<div href ="#" class="data_row">
 					<div class="item head">
 						<img class ="" src="data:image/png;base64,${HeadImgBase64}"/>
-						<a href ="wx.html?wxid=${Uin}" target ="_blank" style="margin-left: 20px">${NickName}</a>
 					</div>
+					<span class="item">
+						<div>
+						<a class ="nickname" href ="wx.html?wxid=${Uin}" target ="_blank" title="${NickName}">${NickName}</a>				
+						</div>
+					</span>
 					<span class="item">
 						<div>
 							<span class="itemLabel">报价</span>
@@ -220,7 +230,9 @@
 				data : $('#form_query').serialize()
 			}).done(function(a, b, c) {
 				$("#dataTmpl").tmpl(a.Items).appendTo("#div_list");
-				
+				if(a.Items.length < 1){
+					$('	<span style="margin: auto">没有找到任何符合条件的微信号，请更改查询条件</span>').appendTo('#div_list');
+				}				
 			}).fail(function(xhr, textStatus, errorThrown) {
 				alert(xhr.responseText);
 			}).always(function(){

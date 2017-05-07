@@ -42,6 +42,7 @@ import wxrmq.data.remote.RmqValue;
 import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.Account;
 import wxrmq.domain.WxUser;
+import wxrmq.domain.WxUser_Tag;
 import wxrmq.utils.NetWork;
 import wxrmq.utils.TextUtils;
 
@@ -61,7 +62,7 @@ public class QueryServlet extends HttpServlet {
 	    }
 	
 	    if(!TextUtils.isEmpty(interest)){
-	    	sql += " and  uin in (select uin from WxUser_Tag where " + interest +")" ;
+	    	sql += " and exists (select 1 from WxUser_Tag b where a.uin = b.uin and type = " + WxUser_Tag.TYPE_INTEREST +" and " + interest +")" ;
 	    }
 	    if(!TextUtils.isEmpty(city)){
 	    	if (!TextUtils.isEmpty(friendsCount)){
@@ -74,7 +75,7 @@ public class QueryServlet extends HttpServlet {
 	    		sql += " and  " + friendsCount ;
 	    	}
 	    }
-	    
+
 
 		
 		int start = 0;

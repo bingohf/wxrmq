@@ -14,5 +14,9 @@
 		<property name="sex" />
 		<property name="friendsCount" />
 		<property name="mobile" />
+		<property name="memo" />
+		<property name="age" />
+		<property name="city" />
+		<property name="quota" />
 	</class>
 </hibernate-mapping> 

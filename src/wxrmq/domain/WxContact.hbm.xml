@@ -13,7 +13,6 @@
 		<property name="sex" />
 		<property name="city" />
 		<property name="province" />
-		<property name="signature" />
 		<property name="starFriend" />
 	</class>
 </hibernate-mapping> 

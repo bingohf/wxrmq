@@ -196,7 +196,6 @@ public class WxUser {
 		this.headImgBase64 = headImgBase64;
 	}
 
-
 	public int getFriendsCount() {
 		return friendsCount;
 	}
@@ -204,6 +203,7 @@ public class WxUser {
 	public void setFriendsCount(int friendsCount) {
 		this.friendsCount = friendsCount;
 	}
+
 	public String getMobile() {
 		return mobile;
 	}
@@ -219,7 +219,29 @@ public class WxUser {
 	public void setUin(Long uin) {
 		this.uin = uin;
 	}
+	public Float getQuota() {
+		return quota;
+	}
 
+	public void setQuota(Float quota) {
+		this.quota = quota;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 	private Long uin;
 	private String userName;
 	private String nickName;
@@ -247,6 +269,10 @@ public class WxUser {
 	private String headImgBase64;
 	private int friendsCount;
 	private String mobile;
+	private Float quota;
+	private Integer age;
+	private String memo;
+
 
 
 }
