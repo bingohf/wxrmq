@@ -27,6 +27,7 @@ public class QueryReturn {
 		private Float quota;
 		private Integer age;
 		private String city;
+		private String interest ;
 		public String getNickName() {
 			return nickName;
 		}
@@ -74,6 +75,12 @@ public class QueryReturn {
 		}
 		public void setAge(Integer age) {
 			this.age = age;
+		}
+		public String getInterest() {
+			return interest;
+		}
+		public void setInterest(String interest) {
+			this.interest = interest;
 		}
 		private String headImgBase64;
 	}

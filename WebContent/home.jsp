@@ -1,3 +1,6 @@
+<%@page import="wxrmq.domain.Account"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
@@ -18,8 +21,12 @@
   <div style="height:50px;width:100%">
     <div style="float: right;margin-right: 13%;">
       <p style="color: #eca95b; font-size: 14px; margin-left: 10px;    line-height: 50px; vertical-align: middle">
-        <a href="login.html" target="">登录</a>&nbsp;&nbsp;&nbsp;
-        <a href="step-join.html" target="">免费注册</a>
+        <%if(session.getAttribute("account") == null){ %>
+        <a href="login.html" target="">登录</a>
+        <% }else{%>
+        <a href="my_home.html" target=""><%=((Account)session.getAttribute("account")).getMobile()%></a>
+        <%} %>
+        &nbsp;&nbsp;&nbsp;<a href="step-join.html" target="">免费注册</a>
       </p>
     </div>
   </div>

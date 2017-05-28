@@ -56,7 +56,9 @@ public class QueryServlet extends HttpServlet {
 		String city = req.getParameter("city");
 		String interest = req.getParameter("interest");
 		
-	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota,city,age from WxUser a where 1=1 ";
+	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota,city,age, "
+	    		+ " (select group_concat(label separator ', ')  from WxUser_Tag b where a.uin=b.uin) INTEREST "
+	    		+ " from WxUser a  where 1=1 ";
 	    if(!TextUtils.isEmpty(quota)){
 	    	sql += " and " + quota;
 	    }
@@ -97,6 +99,7 @@ public class QueryServlet extends HttpServlet {
 			}
 			item.setCity((String)row[6]);
 			item.setAge((Integer)row[7]);
+			item.setInterest((String)row[8]);
 			queryReturn.getItems().add(item);
 		}
 
