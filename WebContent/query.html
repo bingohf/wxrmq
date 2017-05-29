@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+	<link rel="stylesheet"
+	href="bootstrap/3.3.7/css/bootstrap-theme.min.css">
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="js/jquery.tmpl.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/main.css">
+	<style type="text/css">
+		.query_row{
+			border-top: 1px dashed #dedede;
+			overflow: hidden;
+			position: relative;
+			width: 100%;
+		}
+		.row-first{
+			border-top:none;
+		}
+		.query_row .head{
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			width:90px;
+			height: 100%;
+			padding: 9px;
+			background: #eeeeee;
+		}
+		.query_row .body{
+			padding: 0px 10px 0px 100px;
+		}
+		.body .item{
+			float:left;
+			padding: 9px 30px 9px 0px;
+		}
+		.body .item.any{
+			color:red;
+		}
+		.item.active a,.item.active select{
+			color: #fff;
+			background-color: #ff5e89;
+		}
+		.filter{
+			display: none;
+		}
+		.data_row{
+
+		}
+		.item img{
+			width: 80px;
+			height:80px;
+		}
+		.data_row .item{
+			float: left;
+			padding: 5px 80px 5px 0px;
+			height: 90px;
+			display: table;
+		}
+		.data_row .head{
+			padding: 5px 10px 5px 0px;
+		}
+		.data_row .item>div{
+			display: table-cell;
+			vertical-align:middle;
+		}
+		.itemLabel{
+			color:blue;
+		}
+		.data_row:hover{
+			background-color:rgba(128, 128, 128, 0.13);
+		}
+		.nickname {
+    		white-space: nowrap;
+    		width: 100px;
+    		overflow: hidden;
+    		display: block;
+    		text-overflow: ellipsis;
+		}
+	</style>
+	<title>聚推宝 -- 查询</title>
+</head>
+
+<body class="home">
+	<div style="width:1000px;margin: 10px auto">
+		<form id="form_query">
+		<br/>
+
+		<div class="input-group" style="width:500px;margin: 10px auto">
+		  <input type="hidden" class="keyword" name="keyword_interest" qValue="label like '%xxx%'">
+		  <input type="hidden"  class="keyword" name="keyword_city" qValue="city like '%xxx%'">
+		 <input  id="keyword"class="form-control" placeholder="关键字查询" aria-describedby="basic-addon2">
+		 <span class="input-group-btn"> 
+		 <button id="keywordBtn" class="btn btn-default" type="button">查询</button> </span>
+		 </div>
+        <br/>
+			<div style="border: 1px solid #e8e8e8;">
+				<div class="query_row row-first">
+					<div class="head">报价</div>
+					<div class ="body">
+						<input class ="filter" name="quota"/>
+						<span class="item any active"><a href="#" qValue="">不限</a></span>
+						<span class="item"><a href="#" qValue="quota <= 20">20元以下</a></span>
+						<span class="item"><a  href="#"  qValue="quota >=20 and quota <= 50" >20-50元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=50 and quota <= 80" >50-80元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=80 and quota <= 100" >80-100元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=100 and quota <= 120" >100-120元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=120 and quota <= 150" >120-150元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=150 and quota <= 180" >150-180元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=180 and quota <= 250" >180-250元</a></span>
+						<span class="item"><a  href="#" qValue="quota >=250" >250以上元</a></span>
+					</div>
+					<div class="foot"></div>
+				</div>
+				<div class="query_row">
+					<div class="head">好友数</div>
+					<div class ="body">
+						<input class ="filter" name="friendsCount"/>
+						<span class="item any active"><a href="#" qValue="">不限</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount <= 150" >150以下</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=150 and friendsCount <= 300" >150-300</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=300 and friendsCount <= 500">300-500</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=500 and friendsCount <= 800">500-800</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=800 and friendsCount <= 1000">800-1000</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=1000 and friendsCount <= 1500">1000-1500</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=1500 and friendsCount <= 2500">1500-2500</a></span>
+						<span class="item"><a  href="#" qValue="friendsCount >=2500 ">2500以上</a></span>
+					</div>
+					<div class="foot"></div>
+				</div>
+
+				<div class="query_row">
+					<div class="head">地域</div>
+					<div class ="body">
+						<input class ="filter" name="city"/>
+						<span class="item any active"><a href="#" qValue="">不限</a></span>
+						<span class="item"><a  href="#" qValue="city ='合肥' " >合肥</a></span>
+						<span class="item"><a  href="#" qValue="province ='北京' ">北京</a></span>
+						<span class="item"><a  href="#" qValue="province ='上海' ">上海</a></span>
+						<span class="item"><a  href="#" qValue="city ='广州' ">广州</a></span>
+						<span class="item"><a  href="#" qValue="city ='深圳' ">深圳</a></span>
+						<span class="item"><a  href="#" qValue="city ='杭州' ">杭州</a></span>
+						<span class="item"><a  href="#" qValue="city ='重庆' ">重庆</a></span>
+						<span class="item"><a  href="#" qValue="city ='南京' ">南京</a></span>
+						<span class="item"><a  href="#" qValue="city ='武汉' ">武汉</a></span>
+						<span class="item"> <select>
+							<option value="">请选择</option>
+							<option value="city ='芜湖'">芜湖</option>
+							<option value="city ='淮南'">淮南</option>
+							<option value="city ='无锡'">无锡</option>
+						</select></span>
+
+					</div>
+					<div class="foot"></div>
+				</div>
+				<div class="query_row">
+					<div class="head">行业</div>
+					<div class ="body">
+						<input class ="filter" name="interest"/>
+						<span class="item any active"><a href="#" qValue="">不限</a></span>
+						<span class="item"><a  href="#"  qValue="label in('电商','微商') ">电商/微商</a></span>
+						<span class="item"><a  href="#" qValue="label ='互联网' ">互联网</a></span>
+						<span class="item"><a  href="#" qValue="label in('传媒' ,'营销') ">传媒/营销</a></span>
+						<span class="item"><a  href="#" qValue="label in('金融','财经') ">金融/财经</a></span>
+						<span class="item"><a  href="#" qValue="label ='时尚'">时尚</a></span>
+						<span class="item"><a  href="#" qValue="label ='母婴'">母婴</a></span>
+						<span class="item"><a  href="#" qValue="label ='文娱' ">文娱</a></span>
+						<span class="item"><a  href="#" qValue="label in('旅游', '酒店')">旅游/酒店</a></span>
+						<span class="item"><a  href="#" qValue="label ='房地产'">房地产</a></span>
+						<span class="item"><a  href="#" qValue="label ='游戏动漫'">游戏动漫</a></span>
+						<span class="item"><a  href="#" qValue="label ='教育' ">教育</a></span>
+						<span class="item"><a  href="#" qValue="label ='学生'">学生</a></span>
+					</div>
+					<div class="foot"></div>
+				</div>
+			</div>
+		</form>
+		<div style="margin-top: 20px;">
+			<div id="div_loading" style="text-align: center;display: none;"><img src="img/loading.gif"/></div>
+			<div id ="div_list">
+
+			</div>
+		</div>
+	</div>
+
+	<script id="dataTmpl" type="text/x-jquery-tmpl">
+				<div href ="#" class="data_row">
+					<div class="item head">
+						<img class ="" src="data:image/png;base64,${HeadImgBase64}"/>
+					</div>
+					<span class="item">
+						<div>
+						<a class ="nickname" href ="wx.html?wxid=${Uin}" target ="_blank" title="${NickName}">${NickName}</a>				
+						</div>
+					</span>
+					<span class="item">
+						<div>
+							<span class="itemLabel">报价</span>
+							<br/>
+							￥${typeof Quota != "undefined"?Quota :'--'}
+						</div>
+					</span>
+					<span class="item">
+						<div>
+							<span class="itemLabel">好友数</span>
+							<br/>
+							${FriendsCount}
+						</div>
+					</span>
+					<span class="item">
+						<div>
+							${typeof Age == 'undefined' ? '--': Age}岁<br/>
+							${typeof City == 'undefined' ? '--': City}
+						</div>
+					</span>
+					<span class="item" style="">
+						<div>
+							<span class="itemLabel">行业</span>
+							<br/>
+							${Interest}
+						</div>
+					</span>
+					<span class="item" style="float:right">
+						<div>
+							<a  href ="wx.html?wxid=${Uin}" target ="_blank"><button>查看详细</button></a>
+						</div>
+					</span>					
+					<div style="clear: both;"></div>
+				</div>
+	</script>
+	<script>
+		var doQuery = function(){
+			$("#div_loading").show();
+			$("#div_list").empty();
+			$.ajax({
+				url : 'query',
+				type : 'GET',
+				dataType: "json",
+				data : $('#form_query').serialize()
+			}).done(function(a, b, c) {
+				$("#dataTmpl").tmpl(a.Items).appendTo("#div_list");
+				if(a.Items.length < 1){
+					$('	<span style="margin: auto">没有找到任何符合条件的微信号，请更改查询条件</span>').appendTo('#div_list');
+				}				
+			}).fail(function(xhr, textStatus, errorThrown) {
+				alert(xhr.responseText);
+			}).always(function(){
+				$("#div_loading").hide();
+			});
+		}
+
+		$(document).ready(function() {
+			$(".query_row a").click(function(){
+				var parent = $(this).parents('.query_row');
+				parent.find("input").val($(this).attr("qValue"));
+				parent.find(".item").removeClass("active");
+				$(this).parent(".item").addClass("active");
+				parent.find("select").val('');
+				doQuery();
+			});
+
+			$("#keywordBtn").click(function(){
+				var keyword = $("#keyword").val();
+				$(".keyword").each(function(){
+					$(this).val('');
+					if(keyword !=''){
+						$(this).val($(this).attr('qValue').replace('xxx', keyword));
+					}
+				});
+				doQuery();
+			});
+			$(".query_row select").change(function(){
+				var parent = $(this).parents('.query_row');
+				parent.find(".item").removeClass("active");
+				var val = $(this).val();
+				if(val ==''){
+					parent.find(".item.any").addClass("active");
+				}else{
+					$(this).parent(".item").addClass("active");
+				}
+				parent.find("input").val(val);
+				doQuery();
+			});
+			doQuery();
+		});
+	</script>
+</body>
+
+</html>

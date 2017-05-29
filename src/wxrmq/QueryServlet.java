@@ -23,8 +23,12 @@ import org.hibernate.Transaction;
 
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+import com.sun.java_cup.internal.runtime.virtual_parse_stack;
 import com.sun.net.httpserver.Headers;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.sun.org.apache.xpath.internal.operations.And;
+import com.sun.swing.internal.plaf.basic.resources.basic;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -55,7 +59,8 @@ public class QueryServlet extends HttpServlet {
 		String friendsCount = req.getParameter("friendsCount");
 		String city = req.getParameter("city");
 		String interest = req.getParameter("interest");
-		
+		String keyword_interest = req.getParameter("keyword_interest");
+		String keyword_city = req.getParameter("keyword_city");
 	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota,city,age, "
 	    		+ " (select group_concat(label separator ', ')  from WxUser_Tag b where a.uin=b.uin) INTEREST "
 	    		+ " from WxUser a  where 1=1 ";
@@ -77,7 +82,11 @@ public class QueryServlet extends HttpServlet {
 	    		sql += " and  " + friendsCount ;
 	    	}
 	    }
-
+	    if ( !TextUtils.isEmpty(keyword_city) && !TextUtils.isEmpty(keyword_interest)){
+	    	sql += " and ( exists (select 1 from wx_contact b where " + keyword_city + " and b.uin = a.uin)"
+	    			+ " or exists(select 1 from WxUser_Tag b where a.uin=b.uin and "+ keyword_interest +") )";
+	    }
+	    
 
 		
 		int start = 0;
