@@ -8,7 +8,7 @@
 </head>
 <body>
    <% session.setAttribute("account", null);
-      response.sendRedirect("home.jsp");
+      response.sendRedirect("login.html");
    %>
 </body>
 </html>
