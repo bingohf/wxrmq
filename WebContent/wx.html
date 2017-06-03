@@ -6,6 +6,9 @@
 	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
 	<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
 	<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+	
+	<link rel="stylesheet" href="css/blueimp-gallery.min.css">
+	
 	<link rel="stylesheet"
 	href="bootstrap/3.3.7/css/bootstrap-theme.min.css">
 	<script src="js/jquery-3.1.1.min.js"></script>
@@ -38,6 +41,60 @@
 		</tr>
 	</table>
 
+	<div style="width: 1000px;    margin: 30px auto;" >
+	 <label>微信截图</label>
+	 <div id="links" class="links"></div>
+     </div>
+     
+     
+     <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+<div id="blueimp-gallery" class="blueimp-gallery">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+
+
+	<script src="js/jquery.blueimp-gallery.min.js"></script>
+	
+	
+	<script>
+	$(function () {
+		  'use strict'
+		  
+		  $.ajax({
+		    url: 'screenshot/'+$.url().param('wxid'),
+			dataType: "json"
+		  }).done(function (result) {
+		    var carouselLinks = []
+		    var linksContainer = $('#links')
+		    var baseUrl
+		    // Add the demo images as links with thumbnails to the page:
+		    $.each(result.files, function (index, photo) {
+		      baseUrl = photo.url
+		      $('<a/>')
+		        .append($('<img style="width:100px;height:160px;margin-right:10px">').prop('src', baseUrl ))
+		        .prop('href', baseUrl)
+		        .prop('title', photo.name)
+		        .attr('data-gallery', '')
+		        .appendTo(linksContainer)
+		      carouselLinks.push({
+		        href: baseUrl,
+		        title: photo.name
+		      })
+		    })
+		    // Initialize the Gallery as image carousel:
+		    blueimp.Gallery(carouselLinks, {
+		      container: '#blueimp-image-carousel',
+		      carousel: true
+		    })
+		  })
+	});
+</script>
 </body>
 
 </html>
