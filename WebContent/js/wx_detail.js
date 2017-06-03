@@ -66,11 +66,6 @@ var renderPie = function() {
 
 };
 
-
-
-
-
-		
 		
 		var loadDetail = function(){
 			$.ajax({

@@ -100,24 +100,7 @@
 		 </div>
         <br/>
 			<div style="border: 1px solid #e8e8e8;">
-				<div class="query_row row-first">
-					<div class="head">报价</div>
-					<div class ="body">
-						<input class ="filter" name="quota"/>
-						<span class="item any active"><a href="#" qValue="">不限</a></span>
-						<span class="item"><a href="#" qValue="quota <= 20">20元以下</a></span>
-						<span class="item"><a  href="#"  qValue="quota >=20 and quota <= 50" >20-50元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=50 and quota <= 80" >50-80元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=80 and quota <= 100" >80-100元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=100 and quota <= 120" >100-120元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=120 and quota <= 150" >120-150元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=150 and quota <= 180" >150-180元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=180 and quota <= 250" >180-250元</a></span>
-						<span class="item"><a  href="#" qValue="quota >=250" >250以上元</a></span>
-					</div>
-					<div class="foot"></div>
-				</div>
-				<div class="query_row">
+				<div class="query_row  row-first">
 					<div class="head">好友数</div>
 					<div class ="body">
 						<input class ="filter" name="friendsCount"/>
@@ -196,13 +179,6 @@
 					<span class="item">
 						<div>
 						<a class ="nickname" href ="wx.html?wxid=${Uin}" target ="_blank" title="${NickName}">${NickName}</a>				
-						</div>
-					</span>
-					<span class="item">
-						<div>
-							<span class="itemLabel">报价</span>
-							<br/>
-							￥${typeof Quota != "undefined"?Quota :'--'}
 						</div>
 					</span>
 					<span class="item">
