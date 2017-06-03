@@ -75,7 +75,9 @@ var renderPie = function() {
 				contentType: "application/json",
 				dataType: "json"
 			}).done(function(data) {
+
 				window.Rmq = data;
+				$(document).attr("title",Rmq.WxUser.NickName);//修改title值
 				renderPie();
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 

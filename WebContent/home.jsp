@@ -14,7 +14,7 @@
   <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
   <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="css/main.css">
-  <title>聚推宝</title>
+  <title>微营力</title>
 </head>
 
 <body>
