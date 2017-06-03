@@ -36,8 +36,10 @@ public class LoginWxServlet extends HttpServlet {
 			String value = req.getHeader(name);
 			// requestBuilder.addHeader(name, value);
 		}
-		
+		requestBuilder.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
 		String domainName = NetWork.getDomain(redirectUrl);
+		requestBuilder.header("Host", domainName);
+		requestBuilder.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
 	//	requestBuilder.header("host", "wx.qq.com").header("Referer", "https://wx.qq.com/").header("User-Agent",
 	//			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36");
 		//requestBuilder.header("Cookie", null);
