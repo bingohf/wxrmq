@@ -88,6 +88,16 @@
 	<servlet>
 		<servlet-name>GetWxListServlet</servlet-name>
 		<servlet-class>wxrmq.GetWxListServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>screenShot</servlet-name>
+		<servlet-class>wxrmq.ScreenShotServlet</servlet-class>
+	</servlet>	
+	
+	<servlet>
+		<servlet-name>screenShotImg</servlet-name>
+		<servlet-class>wxrmq.ScreenShotImgServlet</servlet-class>
 	</servlet>	
 	<filter>
 		<filter-name>AuthFilter</filter-name>
@@ -168,8 +178,23 @@
 		<servlet-name>GetWxListServlet</servlet-name>
 		<url-pattern>/getWxList</url-pattern>
 	</servlet-mapping>	
-	
+
+	<servlet-mapping>
+		<servlet-name>screenShot</servlet-name>
+		<url-pattern>/screenshot/*</url-pattern>
+	</servlet-mapping>	
+	<servlet-mapping>
+		<servlet-name>screenShotImg</servlet-name>
+		<url-pattern>/screenshot_img/*</url-pattern>
+	</servlet-mapping>		
 	<welcome-file-list>
 	    <welcome-file>home.jsp</welcome-file>
 	</welcome-file-list>	
+	
+	
+<listener>
+    <listener-class>
+      org.apache.commons.fileupload.servlet.FileCleanerCleanup
+    </listener-class>
+  </listener>
 </web-app>
