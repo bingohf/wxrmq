@@ -207,19 +207,15 @@
         return result;
       };
 
-      var renderPie = function() {
-        $("#contactCount").html(Rmq.MemberList.length);
-        $("#quota_price").html(Rmq.MemberList.length / 40);
-
-        var pie_sexData = groupCount(Rmq.MemberList, 'Sex');
-        for (var i = 0; i < pie_sexData.length; i++) {
-          var sex = '男';
-          if(pie_sexData[i].label == 0){
-            sex ='未知';
-          }else if(pie_sexData[i].label ==2){
-            sex ='女';
-          }
-          pie_sexData[i].label = sex ;
+      var renderPie = function(data) {
+        $("#contactCount").html(data.friendsCount);
+        $("#quota_price").html(data.friendsCount / 40 + '~' + data.friendsCount / 20);
+        for (var i = 0; i < data.sex.length; i++) {
+        	data.sex[i].label = data.sex[i].subTag? data.sex[i].subTag:data.sex[i].tag;
+        }
+        
+        for (var i = 0; i < data.city.length; i++) {
+        	data.city[i].label = data.city[i].subTag ? data.city[i].subTag:data.city[i].tag;
         }
         var chart = new CanvasJS.Chart("pie_sex", {
           theme: "theme2",
@@ -231,7 +227,7 @@
             type: "pie",
             showInLegend: true,
             legendText: "{label}",
-            dataPoints: pie_sexData
+            dataPoints: data.sex
           }]
         });
         chart.render();
@@ -247,7 +243,7 @@
             type: "pie",
             showInLegend: true,
             legendText: "{label}",
-            dataPoints: pie_cityData
+            dataPoints: data.city
           }]
         });
         chart.render();
@@ -296,12 +292,11 @@
           contentType: "application/json",
           dataType: "json"
         }).done(function(data) {
-          window.Rmq.MemberList = data.MemberList;
           $(".tab2_section").hide();
           $("#layout_wx_value").show();
-          renderPie();
+          renderPie(data);
         }).fail(function(jqXHR, textStatus, errorThrown) {
-
+        	reset();
         });
       }
       var reset = function() {

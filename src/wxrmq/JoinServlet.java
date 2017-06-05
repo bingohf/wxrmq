@@ -2,6 +2,7 @@ package wxrmq;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +19,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 
 import okhttp3.MediaType;
@@ -32,6 +34,7 @@ import wxrmq.data.remote.ContactList;
 import wxrmq.data.remote.InitResponse;
 import wxrmq.data.remote.UUIDResponse;
 import wxrmq.domain.Account;
+import wxrmq.domain.TagValue;
 import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
 import wxrmq.domain.WxUser_Tag;
@@ -74,7 +77,7 @@ public class JoinServlet extends HttpServlet {
 				req.getSession(true).setAttribute("account", account);
 		
 			InitResponse initResponse = (InitResponse) req.getSession().getAttribute("initResponse");
-			ContactList contactList= (ContactList) req.getSession().getAttribute("contactList");
+			HashMap<String, Object> tagValues= (HashMap<String, Object>) req.getSession().getAttribute("tagValues");
 			initResponse.getUser().setMobile(account.getMobile());
 			SessionFactory dbfactory = RmqDB.getDBFactory();
 			Session session = dbfactory.openSession();
@@ -83,15 +86,24 @@ public class JoinServlet extends HttpServlet {
 				initResponse.getUser().setHeadImgBase64(NetWork.getImageBase64("https://" +hostName
 			+initResponse.getUser().getHeadImgUrl(), NetWork.buildClient(req)));
 				session.save(account);
-				Query query=session.createQuery("delete WxContact s where s.uin=" + initResponse.getUser().getUin());
+				Query query=session.createQuery("delete WxUser_Tag s where s.uin=" + initResponse.getUser().getUin());
 				query.executeUpdate();
-				initResponse.getUser().setFriendsCount(contactList.getMemberList().length);
+				initResponse.getUser().setFriendsCount((Integer)tagValues.get("friendsCount"));
+				initResponse.getUser().setInfoJson(new Gson().toJson(tagValues));
 				session.saveOrUpdate(initResponse.getUser());
+				
+				List<TagValue> citys = (List<TagValue>) tagValues.get("city");
 				int i =0;
-				for(WxContact wxContact : contactList.getMemberList()){
-						wxContact.setSeq(i ++);
-						wxContact.setUin(initResponse.getUser().getUin());
-						session.save(wxContact);
+				for(TagValue tagValue : citys){
+					if(tagValue.getY() >=50){
+						WxUser_Tag tag = new WxUser_Tag();
+						tag.setLabel(tagValue.getTag());
+						tag.setCount(tagValue.getY());
+						tag.setSubLabel(tagValue.getSubTag());
+						tag.setUin(initResponse.getUser().getUin());
+						tag.setType(WxUser_Tag.TYPE_CITY);
+						session.save(tag);
+					}
 				}
 			tx.commit();
 			}catch(HibernateException e){

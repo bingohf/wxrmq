@@ -7,10 +7,12 @@ public class WxUser_Tag implements Serializable {
 	
 	public static final int TYPE_INTEREST = 0;
 	public static final int TYPE_AGE = 1;
+	public static final int TYPE_CITY = 2;
 	
 	private Long uin;
 	private int type;
 	private String label;
+	private String subLabel;
 	private int count;
 	
 
@@ -37,6 +39,12 @@ public class WxUser_Tag implements Serializable {
 	}
 	public void setUin(Long uin) {
 		this.uin = uin;
+	}
+	public String getSubLabel() {
+		return subLabel;
+	}
+	public void setSubLabel(String subLabel) {
+		this.subLabel = subLabel;
 	}
 
 

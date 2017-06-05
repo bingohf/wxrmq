@@ -219,6 +219,7 @@ public class WxUser {
 	public void setUin(Long uin) {
 		this.uin = uin;
 	}
+
 	public Float getQuota() {
 		return quota;
 	}
@@ -242,6 +243,14 @@ public class WxUser {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public String getInfoJson() {
+		return infoJson;
+	}
+
+	public void setInfoJson(String infoJson) {
+		this.infoJson = infoJson;
+	}
+
 	private Long uin;
 	private String userName;
 	private String nickName;
@@ -272,7 +281,7 @@ public class WxUser {
 	private Float quota;
 	private Integer age;
 	private String memo;
-
+	private String infoJson;
 
 
 }

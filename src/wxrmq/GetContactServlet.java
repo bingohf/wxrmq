@@ -2,11 +2,17 @@ package wxrmq;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.MailcapCommandMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +25,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.fasterxml.classmate.util.ResolvedTypeCache.Key;
+import com.google.gson.Gson;
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.net.httpserver.Headers;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -35,8 +44,11 @@ import okio.Okio;
 import retrofit2.Call;
 import wxrmq.data.remote.ContactList;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.domain.TagValue;
+import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
+import wxrmq.utils.TextUtils;
 
 public class GetContactServlet extends HttpServlet {
 	@Override
@@ -52,12 +64,79 @@ public class GetContactServlet extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 		String json = response.body().string();
 		resp.setStatus(response.code());
-		resp.getWriter().write(json);
-		
 		if(response.code() == 200){
 			ContactList contactList = NetWork.getGson().fromJson(json, ContactList.class);
-			req.getSession(true).setAttribute("contactList",contactList);
+			HashMap<String, Object> tagValues = buildTagValueList(contactList);
+			resp.getWriter().write(new Gson().toJson(tagValues));
+			req.getSession(true).setAttribute("tagValues",tagValues);
 		}
+		
+		
 	}
+
+	private HashMap<String, Object> buildTagValueList(ContactList contactList) {
+		ArrayList<TagValue> sexs = new ArrayList<TagValue>();
+		TagValue male = new TagValue();
+		male.setTag("��");
+		male.setY(0);
+		sexs.add(male);
+		
+		TagValue female = new TagValue();
+		female.setTag("Ů");
+		female.setY(0);
+		sexs.add(female);
+		
+		TagValue unkownSex = new TagValue();
+		unkownSex.setTag("δ֪");
+		unkownSex.setY(0);
+
+		HashMap<String, TagValue> hashCitys = new HashMap<>();
+		
+		for(WxContact wxContact: contactList.getMemberList()){
+			switch (wxContact.getSex()) {
+			case 0:
+				unkownSex.setY(unkownSex.getY() + 1);
+				break;
+			case 1:
+				male.setY(male.getY() + 1);
+				break;
+			case 2:
+				female.setY(female.getY() + 1);
+				break;
+			}
+			String cityKey = wxContact.getProvince() + "|" +  wxContact.getCity();
+			TagValue cityTag = hashCitys.get(cityKey);
+			if(cityTag == null){
+				cityTag = new TagValue();
+				cityTag.setTag(wxContact.getProvince());
+				cityTag.setSubTag(wxContact.getCity());
+				cityTag.setY(0);
+				hashCitys.put(cityKey, cityTag);
+				if (TextUtils.isEmpty(wxContact.getProvince()) && TextUtils.isEmpty(wxContact.getCity())){
+					cityTag.setTag("δ֪");
+				}
+			}
+			cityTag.setY(cityTag.getY() +1);
+		
+		}
+		if(unkownSex.getY() >0){
+			sexs.add(unkownSex);
+		}
+		Collection<TagValue> temp = hashCitys.values();
+		TagValue[] citys = temp.toArray(new TagValue[temp.size()]);
+		Arrays.sort(citys, new Comparator<TagValue>() {
+			@Override
+			public int compare(TagValue o1, TagValue o2) {
+				return o1.getY() -o2.getY();
+			}
+		});
+		HashMap<String, Object> result = new HashMap<>();
+		result.put("sex", sexs);
+		result.put("city", Arrays.asList(citys));
+		result.put("friendsCount", contactList.getMemberList().length);
+		return result;
+	}
+	
+
 
 }

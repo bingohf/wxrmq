@@ -10,6 +10,7 @@
             <key-property name="uin"></key-property>  
             <key-property name="type"></key-property>  
             <key-property name="label"></key-property>  
+            <key-property name="subLabel"></key-property>  
         </composite-id>  
 		<property name="count" />
 	</class>
