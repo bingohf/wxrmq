@@ -19,54 +19,50 @@ var groupCount = function(list, key) {
 	}
 	return result;
 };
-var renderPie = function() {
-	$("#friendsCount").html(Rmq.MemberList.length);
-	$("#lb_nickname").html(Rmq.WxUser.NickName);
-	$("#headerImg").attr('src', 'data:image/png;base64,' + Rmq.WxUser.HeadImgBase64);
-	var pie_sexData = groupCount(Rmq.MemberList, 'Sex');
-	for (var i = 0; i < pie_sexData.length; i++) {
-		var sex = '男';
-		if(pie_sexData[i].label == 0){
-			sex ='未知';
-		}else if(pie_sexData[i].label ==2){
-			sex ='女';
-		}
-		pie_sexData[i].label = sex ;
-	}
-	var chart = new CanvasJS.Chart("pie_sex", {
-		theme: "theme2",
-		height: 300,
-		title: {
-			text: "性别分布"
-		},
-		data: [{
-			type: "pie",
-			showInLegend: true,
-			legendText: "{label}",
-			dataPoints: pie_sexData
-		}]
-	});
-	chart.render();
+var renderPie = function(data) {
+	$("#friendsCount").html(data.friendInfo.friendsCount);
+	$("#lb_nickname").html(data.nickName);
+	var sexs = data.friendInfo.sexs;
+    var citys = data.friendInfo.citys;
+    for (var i = 0; i < sexs.length; i++) {
+    	sexs[i].label = sexs[i].subTag? sexs[i].subTag:sexs[i].tag;
+    }
+    
+    for (var i = 0; i < citys.length; i++) {
+    	citys[i].label = citys[i].subTag ? citys[i].subTag:citys[i].tag;
+    }
+    var chart = new CanvasJS.Chart("pie_sex", {
+      theme: "theme2",
+      height: 300,
+      title: {
+        text: "性别分布"
+      },
+      data: [{
+        type: "pie",
+        showInLegend: true,
+        legendText: "{label}",
+        dataPoints: sexs
+      }]
+    });
+    chart.render();
 
-	var pie_cityData = groupCount(Rmq.MemberList, 'City');
-	var chart = new CanvasJS.Chart("pie_city", {
-		theme: "theme2",
-		height: 300,
-		title: {
-			text: "地区分布"
-		},
-		data: [{
-			type: "pie",
-			showInLegend: true,
-			legendText: "{label}",
-			dataPoints: pie_cityData
-		}]
-	});
-	chart.render();
+    var chart = new CanvasJS.Chart("pie_city", {
+      theme: "theme2",
+      height: 300,
+      title: {
+        text: "地区分布"
+      },
+      data: [{
+        type: "pie",
+        showInLegend: true,
+        legendText: "{label}",
+        dataPoints: citys
+      }]
+    });
+    chart.render();
 
-};
-
-		
+  };
+	
 		var loadDetail = function(){
 			$.ajax({
 				type: "get",
@@ -75,10 +71,8 @@ var renderPie = function() {
 				contentType: "application/json",
 				dataType: "json"
 			}).done(function(data) {
-
-				window.Rmq = data;
-				$(document).attr("title",Rmq.WxUser.NickName);//修改title值
-				renderPie();
+				$(document).attr("title",data.NickName);//修改title值
+				renderPie(data);
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 
 			});
@@ -91,7 +85,7 @@ var renderPie = function() {
 				cache: false
 			});
 			loadDetail();
-
+			$("#headerImg").attr("src", "wxImage/" + $.url().param('wxid') +"/head.png");
 
 
 		});

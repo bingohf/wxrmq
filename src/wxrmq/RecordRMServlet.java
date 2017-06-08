@@ -56,7 +56,7 @@ public class RecordRMServlet extends HttpServlet {
 		RecordRmq recordRmq = NetWork.getGson().fromJson(req.getReader(), RecordRmq.class);
 		OkHttpClient client = NetWork.buildClient(req);
 		if (recordRmq.getCurUser().getHeadImgUrl() != null){
-			recordRmq.getCurUser().setHeadImgBase64(getImageBase64("https://wx.qq.com" +recordRmq.getCurUser().getHeadImgUrl(), client));
+			//recordRmq.getCurUser().setHeadImgBase64(getImageBase64("https://wx.qq.com" +recordRmq.getCurUser().getHeadImgUrl(), client));
 		}
 		HttpSession sess = req.getSession(true);
 		Account account = (Account) sess.getAttribute("account");

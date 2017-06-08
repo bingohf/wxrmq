@@ -50,16 +50,8 @@ public class GetWxUserInfoServlet extends HttpServlet {
 		Long wxid = Long.parseLong(req.getParameter("wxid"));
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		WxUserInfo wxUserInfo = new WxUserInfo();
-		wxUserInfo.setWxUser(RmqDB.getById(WxUser.class, wxid));
-		List<Object[]> list = RmqDB.query("from WxContact where uin =?", wxid);
-		WxContact[] wxContacts = new WxContact[list.size()];
-		int i =0;
-		for(Object object :list){
-			wxContacts[i++] = (WxContact) object;
-		}
-		wxUserInfo.setMemberList(wxContacts);
-		resp.getWriter().write(NetWork.getGson().toJson(wxUserInfo));
+		WxUser wxUser = RmqDB.getById(WxUser.class, wxid);
+		resp.getWriter().write(wxUser.getInfoJson());
 	}
 
 }

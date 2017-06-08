@@ -1,6 +1,7 @@
 package wxrmq.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,5 +143,20 @@ public class NetWork {
 			base64 = Base64.encode(byteArrayOutputStream.toByteArray());
 		}
 		return base64;
+	}
+	
+	public static void saveImage(String url,OkHttpClient client,File imgFile) throws IOException{
+
+		if(!imgFile.getParentFile().exists()){
+			imgFile.getParentFile().mkdirs();
+		}
+		Builder requestBuilder = new Request.Builder().url(url);
+		Response response = client.newCall(requestBuilder.build()).execute();
+		if(response.isSuccessful()){
+			System.out.println(imgFile.getAbsolutePath());
+			BufferedSink sink = Okio.buffer(Okio.sink(imgFile));
+			sink.writeAll(response.body().source());
+			sink.close();
+		}
 	}
 }

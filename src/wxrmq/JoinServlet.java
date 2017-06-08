@@ -1,5 +1,6 @@
 package wxrmq;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -33,7 +34,9 @@ import retrofit2.Call;
 import wxrmq.data.remote.ContactList;
 import wxrmq.data.remote.InitResponse;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.data.remote.WxUserInfo;
 import wxrmq.domain.Account;
+import wxrmq.domain.MMapping;
 import wxrmq.domain.TagValue;
 import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
@@ -75,32 +78,26 @@ public class JoinServlet extends HttpServlet {
 			if (account == null){
 				account = Account.createAccount(mobile, password);
 				req.getSession(true).setAttribute("account", account);
-		
-			InitResponse initResponse = (InitResponse) req.getSession().getAttribute("initResponse");
-			HashMap<String, Object> tagValues= (HashMap<String, Object>) req.getSession().getAttribute("tagValues");
-			initResponse.getUser().setMobile(account.getMobile());
+			WxUserInfo wxUserInfo=  (WxUserInfo) req.getSession().getAttribute("wxUserInfo");
+			WxUser wxUser = MMapping.toWxUser(wxUserInfo);
+			wxUser.setMobile(account.getMobile());
 			SessionFactory dbfactory = RmqDB.getDBFactory();
 			Session session = dbfactory.openSession();
 			Transaction tx = session.beginTransaction();
-			try{
-				initResponse.getUser().setHeadImgBase64(NetWork.getImageBase64("https://" +hostName
-			+initResponse.getUser().getHeadImgUrl(), NetWork.buildClient(req)));
+			try{		
 				session.save(account);
-				Query query=session.createQuery("delete WxUser_Tag s where s.uin=" + initResponse.getUser().getUin());
+				Query query=session.createQuery("delete WxUser_Tag s where s.uin=" + wxUser.getUin());
 				query.executeUpdate();
-				initResponse.getUser().setFriendsCount((Integer)tagValues.get("friendsCount"));
-				initResponse.getUser().setInfoJson(new Gson().toJson(tagValues));
-				session.saveOrUpdate(initResponse.getUser());
+				session.saveOrUpdate(wxUser);
 				
-				List<TagValue> citys = (List<TagValue>) tagValues.get("city");
-				int i =0;
+				List<TagValue> citys = wxUserInfo.getFriendInfo().getCitys();
 				for(TagValue tagValue : citys){
 					if(tagValue.getY() >=50){
 						WxUser_Tag tag = new WxUser_Tag();
 						tag.setLabel(tagValue.getTag());
 						tag.setCount(tagValue.getY());
 						tag.setSubLabel(tagValue.getSubTag());
-						tag.setUin(initResponse.getUser().getUin());
+						tag.setUin(wxUser.getUin());
 						tag.setType(WxUser_Tag.TYPE_CITY);
 						session.save(tag);
 					}

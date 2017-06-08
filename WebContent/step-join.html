@@ -73,7 +73,7 @@
                   <label>好友数量</label> <span id="contactCount"></span>
                 </td>
                 <td>
-                  <label>朋友圈报价</label> <span id="quota_price"></span>
+                  <label>朋友圈参考报价</label> <span id="quota_price"></span>
                 </td>
               </tr>
             </table>
@@ -208,14 +208,16 @@
       };
 
       var renderPie = function(data) {
-        $("#contactCount").html(data.friendsCount);
-        $("#quota_price").html(data.friendsCount / 40 + '~' + data.friendsCount / 20);
-        for (var i = 0; i < data.sex.length; i++) {
-        	data.sex[i].label = data.sex[i].subTag? data.sex[i].subTag:data.sex[i].tag;
+        $("#contactCount").html(data.friendInfo.friendsCount);
+        $("#quota_price").html(data.friendInfo.friendsCount / 40 + '~' + data.friendInfo.friendsCount / 20);
+        var sexs = data.friendInfo.sexs;
+        var citys = data.friendInfo.citys;
+        for (var i = 0; i < sexs.length; i++) {
+        	sexs[i].label = sexs[i].subTag? sexs[i].subTag:sexs[i].tag;
         }
         
-        for (var i = 0; i < data.city.length; i++) {
-        	data.city[i].label = data.city[i].subTag ? data.city[i].subTag:data.city[i].tag;
+        for (var i = 0; i < citys.length; i++) {
+        	citys[i].label = citys[i].subTag ? citys[i].subTag:citys[i].tag;
         }
         var chart = new CanvasJS.Chart("pie_sex", {
           theme: "theme2",
@@ -227,7 +229,7 @@
             type: "pie",
             showInLegend: true,
             legendText: "{label}",
-            dataPoints: data.sex
+            dataPoints: sexs
           }]
         });
         chart.render();
@@ -243,7 +245,7 @@
             type: "pie",
             showInLegend: true,
             legendText: "{label}",
-            dataPoints: data.city
+            dataPoints: citys
           }]
         });
         chart.render();

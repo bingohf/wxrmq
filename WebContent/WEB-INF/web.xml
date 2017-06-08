@@ -99,6 +99,11 @@
 		<servlet-name>screenShotImg</servlet-name>
 		<servlet-class>wxrmq.ScreenShotImgServlet</servlet-class>
 	</servlet>	
+	<servlet>
+		<servlet-name>wxImage</servlet-name>
+		<servlet-class>wxrmq.WxImageServlet</servlet-class>
+	</servlet>	
+	
 	<filter>
 		<filter-name>AuthFilter</filter-name>
 		<filter-class>wxrmq.AuthFilter</filter-class>
@@ -186,7 +191,12 @@
 	<servlet-mapping>
 		<servlet-name>screenShotImg</servlet-name>
 		<url-pattern>/screenshot_img/*</url-pattern>
-	</servlet-mapping>		
+	</servlet-mapping>	
+	
+	<servlet-mapping>
+		<servlet-name>wxImage</servlet-name>
+		<url-pattern>/wxImage/*</url-pattern>
+	</servlet-mapping>	
 	<welcome-file-list>
 	    <welcome-file>home.jsp</welcome-file>
 	</welcome-file-list>	

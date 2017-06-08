@@ -1,5 +1,6 @@
 package wxrmq;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
@@ -24,6 +25,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wxrmq.data.remote.InitResponse;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.data.remote.WxUserInfo;
 import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
 
@@ -63,7 +65,13 @@ public class InitWxServlet extends HttpServlet {
 		resp.setStatus(response.code());
 		if(response.code() == 200){
 			InitResponse initResponse = NetWork.getGson().fromJson(json, InitResponse.class);
-			req.getSession(true).setAttribute("initResponse", initResponse);
+			WxUserInfo wxUserInfo = new WxUserInfo();
+			NetWork.saveImage("https://" +hostName
+					+initResponse.getUser().getHeadImgUrl(), NetWork.buildClient(req),new File("../wyl/" +initResponse.getUser().getUin()+"/head.png"));
+			wxUserInfo.setUin(initResponse.getUser().getUin());
+			wxUserInfo.setNickName(initResponse.getUser().getNickName());
+			wxUserInfo.setSex(initResponse.getUser().getSex());
+			req.getSession(true).setAttribute("wxUserInfo", wxUserInfo);
 		}
 		
 

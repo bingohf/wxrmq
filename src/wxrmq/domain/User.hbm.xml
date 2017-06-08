@@ -7,10 +7,7 @@
 	<class name="wxrmq.domain.WxUser" table="wxuser">
 		<id name="uin">
 		</id>
-		<property name="userName" />
 		<property name="nickName" />
-		<property name="headImgUrl" />
-		<property name="headImgBase64" />
 		<property name="sex" />
 		<property name="friendsCount" />
 		<property name="mobile" />
@@ -18,6 +15,8 @@
 		<property name="age" />
 		<property name="city" />
 		<property name="quota" />
+		<property name="industry" />
 		<property name="infoJson" />
+		<property name="malePercent" />
 	</class>
 </hibernate-mapping> 

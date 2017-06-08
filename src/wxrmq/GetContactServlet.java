@@ -43,7 +43,9 @@ import okio.BufferedSink;
 import okio.Okio;
 import retrofit2.Call;
 import wxrmq.data.remote.ContactList;
+import wxrmq.data.remote.InitResponse;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.data.remote.WxUserInfo;
 import wxrmq.domain.TagValue;
 import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
@@ -66,25 +68,25 @@ public class GetContactServlet extends HttpServlet {
 		resp.setStatus(response.code());
 		if(response.code() == 200){
 			ContactList contactList = NetWork.getGson().fromJson(json, ContactList.class);
-			HashMap<String, Object> tagValues = buildTagValueList(contactList);
-			resp.getWriter().write(new Gson().toJson(tagValues));
-			req.getSession(true).setAttribute("tagValues",tagValues);
+			WxUserInfo wxUserInfo = (WxUserInfo) req.getSession(true).getAttribute("wxUserInfo");
+			buildTagValueList(contactList,wxUserInfo);
+			resp.getWriter().write(new Gson().toJson(wxUserInfo));
 		}
 		
 		
 	}
 
-	private HashMap<String, Object> buildTagValueList(ContactList contactList) {
-		ArrayList<TagValue> sexs = new ArrayList<TagValue>();
+	private void buildTagValueList(ContactList contactList, WxUserInfo wxUserInfo) {
+		
 		TagValue male = new TagValue();
 		male.setTag("ÄÐ");
 		male.setY(0);
-		sexs.add(male);
+		wxUserInfo.getFriendInfo().getSexs().add(male);
 		
 		TagValue female = new TagValue();
 		female.setTag("Å®");
 		female.setY(0);
-		sexs.add(female);
+		wxUserInfo.getFriendInfo().getSexs().add(female);
 		
 		TagValue unkownSex = new TagValue();
 		unkownSex.setTag("Î´Öª");
@@ -117,24 +119,24 @@ public class GetContactServlet extends HttpServlet {
 				}
 			}
 			cityTag.setY(cityTag.getY() +1);
-		
+		}
+		if(male.getY() + female.getY() > 0){
+			wxUserInfo.setMalePercent((100f * male.getY()) / (male.getY() + male.getY()));
 		}
 		if(unkownSex.getY() >0){
-			sexs.add(unkownSex);
+			wxUserInfo.getFriendInfo().getSexs().add(unkownSex);
 		}
 		Collection<TagValue> temp = hashCitys.values();
 		TagValue[] citys = temp.toArray(new TagValue[temp.size()]);
 		Arrays.sort(citys, new Comparator<TagValue>() {
 			@Override
 			public int compare(TagValue o1, TagValue o2) {
-				return o1.getY() -o2.getY();
+				return o2.getY() -o1.getY();
 			}
 		});
-		HashMap<String, Object> result = new HashMap<>();
-		result.put("sex", sexs);
-		result.put("city", Arrays.asList(citys));
-		result.put("friendsCount", contactList.getMemberList().length);
-		return result;
+		wxUserInfo.getFriendInfo().setFriendsCount(contactList.getMemberList().length);
+		wxUserInfo.getFriendInfo().getCitys().clear();
+		wxUserInfo.getFriendInfo().getCitys().addAll(Arrays.asList(citys));
 	}
 	
 
