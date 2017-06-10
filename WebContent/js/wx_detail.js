@@ -20,8 +20,15 @@ var groupCount = function(list, key) {
 	return result;
 };
 var renderPie = function(data) {
-	$("#friendsCount").html(data.friendInfo.friendsCount);
-	$("#lb_nickname").html(data.nickName);
+	var detail = '好友数:' + data.friendInfo.friendsCount;
+	if (data.sex == 1){
+		detail += ' 男';
+	}else if(data.sex == 2){
+		detail += ' 女';
+	}
+	
+	$("#detail").html(detail);
+	$(".media-heading").html(data.nickName);
 	var sexs = data.friendInfo.sexs;
     var citys = data.friendInfo.citys;
     for (var i = 0; i < sexs.length; i++) {
@@ -71,8 +78,9 @@ var renderPie = function(data) {
 				contentType: "application/json",
 				dataType: "json"
 			}).done(function(data) {
-				$(document).attr("title",data.NickName);//修改title值
-				renderPie(data);
+				$("#dataTmpl").tmpl(data).appendTo("#basic-info .panel-body");
+				var detailInfo = eval('(' + data.infoJson+ ')');
+				renderPie(detailInfo);
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 
 			});
@@ -85,7 +93,4 @@ var renderPie = function(data) {
 				cache: false
 			});
 			loadDetail();
-			$("#headerImg").attr("src", "wxImage/" + $.url().param('wxid') +"/head.png");
-
-
 		});

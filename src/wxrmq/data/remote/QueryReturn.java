@@ -1,5 +1,6 @@
 package wxrmq.data.remote;
 
+import java.awt.datatransfer.FlavorTable;
 import java.util.ArrayList;
 
 public class QueryReturn {
@@ -23,11 +24,13 @@ public class QueryReturn {
 		private Long uin;
 		private String nickName;
 		private int sex;
-		private int FriendsCount;
+		private int friendsCount;
 		private Float quota;
 		private Integer age;
 		private String city;
-		private String interest ;
+		private String industry ;
+		private Float malePercent;
+		private String memo;
 		public String getNickName() {
 			return nickName;
 		}
@@ -41,16 +44,10 @@ public class QueryReturn {
 			this.sex = sex;
 		}
 		public int getFriendsCount() {
-			return FriendsCount;
+			return friendsCount;
 		}
 		public void setFriendsCount(int friendsCount) {
-			FriendsCount = friendsCount;
-		}
-		public String getHeadImgBase64() {
-			return headImgBase64;
-		}
-		public void setHeadImgBase64(String headImgBase64) {
-			this.headImgBase64 = headImgBase64;
+			this.friendsCount = friendsCount;
 		}
 		public Long getUin() {
 			return uin;
@@ -76,12 +73,18 @@ public class QueryReturn {
 		public void setAge(Integer age) {
 			this.age = age;
 		}
-		public String getInterest() {
-			return interest;
+		public Float getMalePercent() {
+			return malePercent;
 		}
-		public void setInterest(String interest) {
-			this.interest = interest;
+		public void setMalePercent(Float malePercent) {
+			this.malePercent = malePercent;
 		}
-		private String headImgBase64;
+		public String getIndustry() {
+			return industry;
+		}
+		public void setIndustry(String industry) {
+			this.industry = industry;
+		}
+
 	}
 }

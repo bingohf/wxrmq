@@ -18,7 +18,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import com.google.gson.Gson;
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 import com.sun.net.httpserver.Headers;
@@ -43,7 +42,7 @@ import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
 
-public class GetWxUserInfoServlet extends HttpServlet {
+public class WxUserInfoServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
@@ -51,7 +50,7 @@ public class GetWxUserInfoServlet extends HttpServlet {
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		WxUser wxUser = RmqDB.getById(WxUser.class, wxid);
-		resp.getWriter().write(new Gson().toJson(wxUser));
+		resp.getWriter().write(wxUser.getInfoJson());
 	}
 
 }

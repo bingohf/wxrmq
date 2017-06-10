@@ -75,7 +75,7 @@ public class WxImageServlet extends HttpServlet {
 			}
 			MFile mFile = new MFile();
 			mFile.setDeleteType("DELETE");
-			String imgUrl = "wxImage" + path  + file.getName();
+			String imgUrl = "wxImage" + path  +"/"+ file.getName();
 			mFile.setDeleteUrl(imgUrl);
 			mFile.setName(file.getName());
 			mFile.setSize(file.length());

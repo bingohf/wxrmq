@@ -21,6 +21,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.google.gson.Gson;
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 import com.sun.java_cup.internal.runtime.virtual_parse_stack;
@@ -55,44 +56,31 @@ public class QueryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
 		req.setCharacterEncoding("UTF-8");
-		String quota = req.getParameter("quota");
+		String quota =  req.getParameter("quota");
 		String friendsCount = req.getParameter("friendsCount");
 		String city = req.getParameter("city");
-		String interest = req.getParameter("interest");
-		String keyword_interest = req.getParameter("keyword_interest");
-		String keyword_city = req.getParameter("keyword_city");
-	    String sql = "select uin,nickName,headImgBase64,Sex,FriendsCount,quota,city,age, "
-	    		+ " (select group_concat(label separator ', ')  from WxUser_Tag b where a.uin=b.uin) INTEREST "
-	    		+ " from WxUser a  where 1=1 ";
+		String sex = req.getParameter("sex");
+	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent "
+	            + " from WxUser a  where 1=1 ";
 	    if(!TextUtils.isEmpty(quota)){
-	    	sql += " and " + quota;
-	    }
-	
-	    if(!TextUtils.isEmpty(interest)){
-	    	sql += " and exists (select 1 from WxUser_Tag b where a.uin = b.uin and type = " + WxUser_Tag.TYPE_INTEREST +" and " + interest +")" ;
+	    	sql += " and " + replaceParam(quota, "quota");
 	    }
 	    if(!TextUtils.isEmpty(city)){
+	    	city = replaceParam(city, "label") + " or " + replaceParam(city, "subLabel");
 	    	if (!TextUtils.isEmpty(friendsCount)){
-	    		sql += " and  exists ( select 1 from (  select uin ,count(1) friendsCount from wx_contact b where  " + city +" group by uin) c where  c.uin = a.uin and " + friendsCount+")" ;
+	    		sql += " and  exists (select 1 from wxUser_Tag b where a.uin= b.uin and " +  replaceParam(friendsCount, "count") + " and (" + city +"))";
 	    	} else{
-	    		sql += " and  exists ( select 1 from (  select uin, count(1) friendsCount from wx_contact b where  " + city +" group by uin) c  where c.uin = a.uin)" ;
+	    		sql += " and  exists (select 1 from wxUser_Tag b where a.uin= b.uin and (" + city +"))";
 	    	}
 	    }else{
 	    	if (!TextUtils.isEmpty(friendsCount)){
-	    		sql += " and  " + friendsCount ;
+	    		sql += " and  " + replaceParam(friendsCount, "friendsCount") ;
 	    	}
+	    }	
+	    if(!TextUtils.isEmpty(sex)){
+	    	sql += " and " + replaceParam(sex, "malePercent");
 	    }
-	    if ( !TextUtils.isEmpty(keyword_city) && !TextUtils.isEmpty(keyword_interest)){
-	    	sql += " and ( exists (select 1 from wx_contact b where " + keyword_city + " and b.uin = a.uin)"
-	    			+ " or exists(select 1 from WxUser_Tag b where a.uin=b.uin and "+ keyword_interest +") )";
-	    }
-	    
-
-		
-		int start = 0;
-		int count = 100;
 		resp.setCharacterEncoding("UTF-8");
-		RmqValue rmqValue = new RmqValue();
 		List<Object[]> result = RmqDB.sqlQuery(sql);
 		QueryReturn queryReturn = new QueryReturn();
 		
@@ -100,20 +88,21 @@ public class QueryServlet extends HttpServlet {
 			QueryReturn.Item item = new QueryReturn.Item();
 			item.setUin(((BigInteger)row[0]).longValue());
 			item.setNickName((String)row[1]);
-			item.setHeadImgBase64((String)row[2]);
-			item.setSex(((BigInteger)row[3]).intValue());
-			item.setFriendsCount(((BigInteger)row[4]).intValue());
-			if(row[5] != null){
-				item.setQuota(((BigDecimal)row[5]).floatValue());
-			}
-			item.setCity((String)row[6]);
-			item.setAge((Integer)row[7]);
-			item.setInterest((String)row[8]);
+			item.setSex(((BigInteger)row[2]).intValue());
+			item.setFriendsCount(((BigInteger)row[3]).intValue());
+			item.setCity((String)row[4]);
+			item.setAge((Integer)row[5]);
+			item.setIndustry((String)row[6]);
+			item.setMalePercent(((BigDecimal )row[7]).floatValue());
 			queryReturn.getItems().add(item);
 		}
 
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
-		resp.getWriter().write(NetWork.getGson().toJson(queryReturn));
+		resp.getWriter().write(new Gson().toJson(queryReturn));
+	}
+	
+	private String replaceParam(String qString,String paramName){
+		return qString.replaceAll("\\(param\\)", paramName);
 	}
 
 }

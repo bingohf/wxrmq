@@ -43,30 +43,72 @@
 	<script src="js/jquery.fileupload-validate.js"></script>
 	<!-- The File Upload user interface plugin -->
 	<script src="js/jquery.fileupload-ui.js"></script>
-
+	<script src="js/jquery.tmpl.min.js"></script>
 	<script src="js/wxdetail.fileupload.js"></script>
-	<title>Loading -- 微信微营力</title>
+	<title>微营力</title>
 </head>
 
 <body class="home">
 
-	<table class="home_container">
-		<tr>
-			<td>
-				<div >
-					<img id= "headerImg" src=""/>
-					<br/>
-					<label id="lb_nickname"></label>
-					<br/>
-					<label id="lb_friendsCount">好友总数:</label><span id="friendsCount"> -- </span>
+<div class="panel-group" id="">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				微信信息
+			</h4>
+		</div>
+		<div id="basic-info" class="panel-collapse collapse in">
+			<div class="panel-body">
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<a data-toggle="collapse" data-parent="#accordion" 
+				   href="#collapseTwo" aria-expanded="true">
+					性别分布
+				</a>
+			</h4>
+		</div>
+		<div id="collapseTwo" class="panel-collapse collapse in" aria-expanded="true">
+			<div class="panel-body">
+			<div id="pie_sex" style="height: 300px; width: 300px;"></div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<a data-toggle="collapse" data-parent="#accordion" 
+				   href="#collapseThree"  aria-expanded="true">
+					地区分布
+				</a>
+			</h4>
+		</div>
+		<div id="collapseThree" class="panel-collapse collapse in"  aria-expanded="true">
+			<div class="panel-body">
+				<div id="pie_city" style="height: 300px; width: 300px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+  
+  <script id="dataTmpl" type="text/x-jquery-tmpl">
+			<div class="media">
+				<a href="wx.html?wxid=${uin}" class="pull-left">
+					<img src="wxImage/${uin}/head.png" style="width:60px; height:60px;float:left" class="media-photo"/>
+				</a>
+				<div class="media-body">
+					<span class="media-meta pull-right">好友数:${friendsCount}</span>
+					<h4 class="title">
+						${nickName}
+					</h4>
+					<p class="summary">${sex == 1?'男':(sex == 2?'女':'')} ${city} ${industry} ${typeof malePercent == 'undefined'?'':(malePercent >50?'男多':'女多')}</p>
 				</div>
-			</td>
-			<td>
-				<div id="pie_sex" style="height: 300px; width: 300px;"></div>
-			</td>
-			<td><div id="pie_city" style="height: 300px; width: 300px;"></div> </td>
-		</tr>
-	</table>
+			</div>
+</script>
+
     <form id="fileupload" action="//jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data"
     style="width: 1000px;    margin: 30px auto;" 
     >

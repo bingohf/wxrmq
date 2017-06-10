@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	 <meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+	<link rel="stylesheet"
+	href="bootstrap/3.3.7/css/bootstrap-theme.min.css">
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="js/jquery.tmpl.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="js/query2.js"></script>
+	<title>微营力 -- 查询</title>
+</head>
+
+<body style= "margin: 5px 5px;">
+<div class="filter">
+	<div class="btn-group">
+	  <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		好友数<span class="selected">:不限</span> <span class="caret"></span>
+	  </button>
+	  <input type="hidden" class="q_input" name="friendsCount"/>
+	  <ul class="dropdown-menu">
+		<li><a href="#" q ="">不限</a></li>
+		<li role="separator" class="divider"></li>
+		<li><a href="#"  q ="(param) <150">150以下</a></li>
+		<li><a href="#" q ="(param) >=150 and (param)<=300">150-300</a></li>
+		<li><a href="#" q ="(param) >=300 and (param)<=500" >300-500</a></li>
+		<li><a href="#" q ="(param) >=500 and (param)<=800">500-800</a></li>
+		<li><a href="#" q ="(param) >=800 and (param)<=1000">800-1000</a></li>
+		<li><a href="#" q ="(param) > 1000">1000以上</a></li>
+	  </ul>
+	</div>
+	
+	<div class="btn-group">
+	  <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		地区<span class="selected">:不限</span> <span class="caret"></span>
+	  </button>
+	  <input type="hidden" class="q_city" name="city"/>
+	  <ul class="dropdown-menu">
+		<li><a href="#" q="">不限</a></li>
+		<li role="separator" class="divider"></li>
+		<li><a href="#"  q ="(param) = '北京'">北京</a></li>
+		<li><a href="#"  q ="(param) = '上海'">上海</a></li>
+		<li><a href="#"  q ="(param) = '广州'">广州</a></li>
+		<li><a href="#"  q ="(param) = '深圳'">深圳</a></li>
+		<li><a href="#"  q ="(param) = '杭州'">杭州</a></li>
+		<li><a href="#"  q ="(param) = '南京'">南京</a></li>
+		<li><a href="#"  q ="(param) = '成都'">成都</a></li>
+		<li><a href="#"  q ="(param) = '重庆'">重庆</a></li>
+		<li><a href="#" q ="(param) = '武汉'">武汉</a></li>
+		<li><a href="#"  q ="(param) = '长沙'">长沙</a></li>
+		<li><a href="#" q ="(param) = '合肥'">合肥</a></li>
+	  </ul>
+	</div>
+	<div class="btn-group">
+	  <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		好友性别<span class="selected">:不限</span> <span class="caret"></span>
+	  </button>
+	   <input type="hidden" class="q_sex" name="sex"/>
+	  <ul class="dropdown-menu">
+		<li><a href="#" q="">不限</a></li>
+		<li role="separator" class="divider"></li>
+		<li><a href="#" q ="(param) > 50">男多</a></li>
+		<li><a href="#" q= "(param) < 50">女多</a></li>
+	  </ul>
+	</div>
+	
+	
+	<div class="btn-group" style="display:none;">
+	  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		行业<span class="selected">:不限</span> <span class="caret"></span>
+	  </button>
+	   <input type="hidden"  name="industry"/>
+	  <ul class="dropdown-menu">
+		<li><a href="#" q="">不限</a></li>
+		<li role="separator" class="divider"></li>
+		<li><a href="#" q= "(param) ='时尚'">时尚</a></li>
+		<li><a href="#" q= "(param) ='母婴'">母婴</a></li>
+		<li><a href="#" q= "(param) ='旅游'">旅游</a></li>
+		<li><a href="#" q= "(param) ='教育'">教育</a></li>
+		<li><a href="#" q ="(param) in('电商','微商') ">电商/微商</a></li>
+		<li><a href="#" q= "(param) ='互联网'">互联网</a></li>
+		<li><a href="#" q= "(param) in('传媒','营销')">传媒/营销</a></li>
+	  </ul>
+	</div>
+</div>
+<br/>
+<div>
+
+    <div id="div_loading" style="text-align: center;display: none;"><img src="img/loading.gif"/></div>
+	<span id="nodata" style="margin: auto;display: none;">没有找到任何符合条件的微信号，请更改查询条件</span>
+	<ul class="list-group">
+	</ul>
+</div>
+
+<script id="dataTmpl" type="text/x-jquery-tmpl">
+		<li class="list-group-item">
+			<div class="media">
+				<a href="wx.html?wxid=${uin}" class="pull-left">
+					<img src="wxImage/${uin}/head.png" style="width:60px; height:60px;float:left" class="media-photo"/>
+				</a>
+				<div class="media-body">
+					<span class="media-meta pull-right">好友数:${friendsCount}</span>
+					<h4 class="title">
+						${nickName}
+					</h4>
+					<p class="summary">${sex == 1?'男':(sex == 2?'女':'')} ${city} ${industry} ${typeof malePercent == 'undefined'?'':(malePercent >50?'男多':'女多')}</p>
+				</div>
+			</div>
+			<div style="clear:both"></div>
+		</li>
+</script>
+</body>
+
+</html>
