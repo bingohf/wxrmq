@@ -78,7 +78,7 @@ public class MobileValidationCodeServlet extends HttpServlet {
 	private void sendSMS(String mobile,String mobileCode,String ip,OkHttpClient okHttpClient) throws IOException, SmsException{
 		SmSLog smSLog = RmqDB.getById(SmSLog.class, mobile);
 		if (smSLog == null || System.currentTimeMillis() - smSLog.getLastSentDate().getTime() > 60000){
-			String smsURL = "http://106.ihuyi.com/webservice/sms.php?method=Submit&account=cf_ddkeji008&password=5a216fec4d5e397df19d702cb6348e5f&mobile="+ mobile+"&format=json&content=%E6%82%A8%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%E6%98%AF%EF%BC%9A"+ mobileCode+"%E3%80%82%E8%AF%B7%E4%B8%8D%E8%A6%81%E6%8A%8A%E9%AA%8C%E8%AF%81%E7%A0%81%E6%B3%84%E9%9C%B2%E7%BB%99%E5%85%B6%E4%BB%96%E4%BA%BA%E3%80%82";
+			String smsURL = "http://106.ihuyi.com/webservice/sms.php?method=Submit&account=cf_ddkeji008&password=5e6588394cffbfbab9113b3a10c61726&mobile="+ mobile+"&format=json&content=%E6%82%A8%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%E6%98%AF%EF%BC%9A"+ mobileCode+"%E3%80%82%E8%AF%B7%E4%B8%8D%E8%A6%81%E6%8A%8A%E9%AA%8C%E8%AF%81%E7%A0%81%E6%B3%84%E9%9C%B2%E7%BB%99%E5%85%B6%E4%BB%96%E4%BA%BA%E3%80%82";
 			Builder requestBuilder = new Request.Builder().url(smsURL);
 			Response response = okHttpClient.newCall(requestBuilder.build()).execute();
 		}else{
