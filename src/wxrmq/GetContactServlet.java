@@ -121,7 +121,7 @@ public class GetContactServlet extends HttpServlet {
 			cityTag.setY(cityTag.getY() +1);
 		}
 		if(male.getY() + female.getY() > 0){
-			wxUserInfo.setMalePercent((100f * male.getY()) / (male.getY() + male.getY()));
+			wxUserInfo.setMalePercent((100f * male.getY()) / (male.getY() + female.getY()));
 		}
 		if(unkownSex.getY() >0){
 			wxUserInfo.getFriendInfo().getSexs().add(unkownSex);

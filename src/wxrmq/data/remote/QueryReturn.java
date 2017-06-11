@@ -21,7 +21,7 @@ public class QueryReturn {
 	}
 
 	public static class Item{
-		private Long uin;
+		private String uin;
 		private String nickName;
 		private int sex;
 		private int friendsCount;
@@ -49,10 +49,10 @@ public class QueryReturn {
 		public void setFriendsCount(int friendsCount) {
 			this.friendsCount = friendsCount;
 		}
-		public Long getUin() {
+		public String getUin() {
 			return uin;
 		}
-		public void setUin(Long uin) {
+		public void setUin(String uin) {
 			this.uin = uin;
 		}
 		public Float getQuota() {

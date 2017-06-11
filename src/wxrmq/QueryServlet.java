@@ -86,7 +86,7 @@ public class QueryServlet extends HttpServlet {
 		
 		for (Object[] row : result) {
 			QueryReturn.Item item = new QueryReturn.Item();
-			item.setUin(((BigInteger)row[0]).longValue());
+			item.setUin((String) row[0]);
 			item.setNickName((String)row[1]);
 			item.setSex(((BigInteger)row[2]).intValue());
 			item.setFriendsCount(((BigInteger)row[3]).intValue());
