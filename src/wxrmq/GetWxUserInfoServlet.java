@@ -47,7 +47,7 @@ public class GetWxUserInfoServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
-		Long wxid = Long.parseLong(req.getParameter("wxid"));
+		String wxid = req.getParameter("wxid");
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		WxUser wxUser = RmqDB.getById(WxUser.class, wxid);

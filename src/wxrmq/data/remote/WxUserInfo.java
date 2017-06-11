@@ -7,7 +7,7 @@ import wxrmq.domain.WxContact;
 import wxrmq.domain.WxUser;
 
 public class WxUserInfo {
-	private Long uin;
+	private String uin;
 	private String nickName;
 	private Integer sex;
 	private String province;
@@ -20,14 +20,7 @@ public class WxUserInfo {
 	private FriendInfo friendInfo = new FriendInfo();
 	private Float malePercent;
 	
-	public Long getUin() {
-		return uin;
-	}
 
-
-	public void setUin(Long uin) {
-		this.uin = uin;
-	}
 
 
 
@@ -138,6 +131,16 @@ public class WxUserInfo {
 
 	public void setMalePercent(Float malePercent) {
 		this.malePercent = malePercent;
+	}
+
+
+	public String getUin() {
+		return uin;
+	}
+
+
+	public void setUin(String uin) {
+		this.uin = uin;
 	}
 
 

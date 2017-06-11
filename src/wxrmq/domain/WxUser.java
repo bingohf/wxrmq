@@ -58,11 +58,11 @@ public class WxUser {
 		this.mobile = mobile;
 	}
 
-	public Long getUin() {
+	public String getUin() {
 		return uin;
 	}
 
-	public void setUin(Long uin) {
+	public void setUin(String uin) {
 		this.uin = uin;
 	}
 
@@ -125,7 +125,7 @@ public class WxUser {
 
 
 
-	private Long uin;
+	private String uin;
 	private String nickName;
 	private int sex;
 	private String province;
