@@ -3,6 +3,8 @@ package wxrmq.data.remote;
 import java.awt.datatransfer.FlavorTable;
 import java.util.ArrayList;
 
+import wxrmq.utils.TextUtils;
+
 public class QueryReturn {
 	private int totalCont;
 	private ArrayList<Item> items = new ArrayList<>();
@@ -66,6 +68,9 @@ public class QueryReturn {
 		}
 		public void setCity(String city) {
 			this.city = city;
+			if(TextUtils.isEmpty(this.city)){
+				this.city = "";
+			}
 		}
 		public Integer getAge() {
 			return age;
@@ -84,6 +89,9 @@ public class QueryReturn {
 		}
 		public void setIndustry(String industry) {
 			this.industry = industry;
+			if(TextUtils.isEmpty(this.industry)){
+				this.industry = "";
+			}
 		}
 
 	}
