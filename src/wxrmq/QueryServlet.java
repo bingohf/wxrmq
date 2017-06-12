@@ -81,7 +81,7 @@ public class QueryServlet extends HttpServlet {
 	    	sql += " and " + replaceParam(sex, "malePercent");
 	    }
 		resp.setCharacterEncoding("UTF-8");
-		List<Object[]> result = RmqDB.sqlQuery(sql);
+		List<Object[]> result = RmqDB.sqlQuery(sql + "  order by friendsCount desc LIMIT 0,500;");
 		QueryReturn queryReturn = new QueryReturn();
 		
 		for (Object[] row : result) {

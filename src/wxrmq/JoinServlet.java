@@ -86,7 +86,7 @@ public class JoinServlet extends HttpServlet {
 			Transaction tx = session.beginTransaction();
 			try{		
 				session.save(account);
-				Query query=session.createQuery("delete WxUser_Tag s where s.uin=" + wxUser.getUin());
+				Query query=session.createQuery("delete WxUser_Tag s where s.uin='" + wxUser.getUin() +"'");
 				query.executeUpdate();
 				session.saveOrUpdate(wxUser);
 				
@@ -99,7 +99,7 @@ public class JoinServlet extends HttpServlet {
 						tag.setSubLabel(tagValue.getSubTag());
 						tag.setUin(wxUser.getUin());
 						tag.setType(WxUser_Tag.TYPE_CITY);
-						session.save(tag);
+						session.saveOrUpdate(tag);
 					}
 				}
 			tx.commit();
