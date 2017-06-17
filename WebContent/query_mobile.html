@@ -45,7 +45,9 @@
 		<li><a href="#" q ="(param) >=300 and (param)<=500" >300-500</a></li>
 		<li><a href="#" q ="(param) >=500 and (param)<=800">500-800</a></li>
 		<li><a href="#" q ="(param) >=800 and (param)<=1000">800-1000</a></li>
-		<li><a href="#" q ="(param) > 1000">1000以上</a></li>
+		<li><a href="#" q ="(param) >=1000 and (param)<=1500">1000-1500</a></li>
+		<li><a href="#" q ="(param) >=500 and (param)<=2000">1500-2000</a></li>
+		<li><a href="#" q ="(param) > 2000">2000以上</a></li>
 	  </ul>
 	</div>
 	
@@ -78,7 +80,7 @@
 	  <ul class="dropdown-menu">
 		<li><a href="#" q="">不限</a></li>
 		<li role="separator" class="divider"></li>
-		<li><a href="#" q ="(param) > 50">男多</a></li>
+		<li><a href="#" q ="(param) >= 50">男多</a></li>
 		<li><a href="#" q= "(param) < 50">女多</a></li>
 	  </ul>
 	</div>
@@ -131,6 +133,10 @@
 	<span id="nodata" style="margin: auto;display: none;">没有找到任何符合条件的微信号，请更改查询条件</span>
 	<ul class="list-group">
 	</ul>
+	 <div id="loadmore" style="text-align: center;display: none;">
+	 	<a href="javascript:void(0)">加载更多</a>
+		<img src="img/loading.gif" style="display:none;" width=60 height=60/>
+	 </div>
 </div>
 
 <script id="dataTmpl" type="text/x-jquery-tmpl">

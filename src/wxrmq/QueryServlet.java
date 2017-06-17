@@ -65,7 +65,10 @@ public class QueryServlet extends HttpServlet {
 			count ="500";
 		}
 		
-		String keyword = req.getParameter("keyword").replaceAll("'", "''");
+		String keyword = req.getParameter("keyword");
+		if(!TextUtils.isEmpty(keyword)){
+			keyword = keyword.replaceAll("'", "''");
+		}
 		String quota =  req.getParameter("quota");
 		String friendsCount = req.getParameter("friendsCount");
 		String city = req.getParameter("city");

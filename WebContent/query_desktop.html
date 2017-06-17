@@ -189,8 +189,9 @@
 			<div id ="div_list">
 
 			</div>
-			<div style="text-align: center;">
-				<a id ="btn_loadMore" href="#">加载更多</a>
+			<div id ="loadmore" style="text-align: center;">
+				<a href="javascript:void(0)">加载更多</a>
+				<img src="img/loading.gif" style="display:none;" width=60 height=60/>
 			</div>
 		</div>
 	</div>
@@ -249,10 +250,11 @@
 	    	
 	    }
 		var doQuery = function(){
+			queryParam.start =0;
 			queryParam = $.extend(queryParam,getInput());
 			$("#div_loading").show();
 			$("#div_list").empty();
-			$("#btn_loadMore").hide();
+			$("#loadmore").hide();
 			$.ajax({
 				url : 'query',
 				type : 'GET',
@@ -262,14 +264,35 @@
 				$("#dataTmpl").tmpl(a.items).appendTo("#div_list");
 				if(a.items.length < 1){
 					$('	<span style="margin: auto">没有找到任何符合条件的微信号，请更改查询条件</span>').appendTo('#div_list');
-				}				
+				}			
+				$("#loadmore").show();
 			}).fail(function(xhr, textStatus, errorThrown) {
 				alert(xhr.responseText);
 			}).always(function(){
 				$("#div_loading").hide();
 			});
 		}
-
+		var loadNextPage = function(){
+			queryParam.start = 	queryParam.start  + queryParam.count;
+			$("#loadmore img").show();
+			$("#loadmore a").hide();
+			$.ajax({
+				url : 'query',
+				type : 'GET',
+				dataType: "json",
+				data :queryParam
+			}).done(function(a, b, c) {
+				$("#dataTmpl").tmpl(a.items).appendTo("#div_list");		
+				$("#loadmore a").show();
+			}).fail(function(xhr, textStatus, errorThrown) {
+				alert(xhr.responseText);
+			}).always(function(){
+				$("#loadmore img").hide();
+			});
+		}
+		$("#loadmore a").click(function(){
+			loadNextPage();
+		});
 		$(document).ready(function() {
 			$(".query_row a").click(function(){
 				var parent = $(this).parents('.query_row');
@@ -296,6 +319,7 @@
 				doQuery();
 			});
 			doQuery();
+
 		});
 	</script>
 </body>

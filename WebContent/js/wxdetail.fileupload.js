@@ -10,7 +10,7 @@
  */
 
 /* global $, window */
-
+if(localStorage) localStorage.clear();
 $(function () {
     'use strict';
 
