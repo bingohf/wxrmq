@@ -58,7 +58,12 @@ import wxrmq.utils.TextUtils;
 public class WxImageServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setHeader("Content-type", "text/html;charset=UTF-8");
+		resp.setCharacterEncoding("UTF-8");	
 		File file = new File("../wyl" +req.getPathInfo());
+		if (!file.exists()){
+			file = new File("../wyl" +req.getPathInfo() +"/");
+		}
 		if(file.isFile()){
 			getSingleFile(file, resp);
 		}else if (file.isDirectory()){
@@ -127,7 +132,8 @@ public class WxImageServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String uin = req.getPathInfo().replaceAll("\\/", "");
+		resp.setHeader("Content-type", "text/html;charset=UTF-8");
+		resp.setCharacterEncoding("UTF-8");	
 		File file = new File("temp/");
 		if(!file.exists()){
 			file.mkdirs();
@@ -147,7 +153,7 @@ public class WxImageServlet extends HttpServlet {
 			    if (item.isFormField()) {
 			       // processFormField(item, ++index, uin);
 			    } else {
-			    	processUploadedFile(item, ++index, uin,mFiles);
+			    	processUploadedFile(item, ++index, req.getPathInfo(),mFiles);
 			    }
 			}
 		} catch (FileUploadException e) {
@@ -162,13 +168,13 @@ public class WxImageServlet extends HttpServlet {
 		resp.getWriter().write(new Gson().toJson(list));
 	}
 	
-	private void processUploadedFile(FileItem item,int index ,String uin, ArrayList<MFile> mFiles) throws Exception {
+	private void processUploadedFile(FileItem item,int index ,String path, ArrayList<MFile> mFiles) throws Exception {
 		String fieldName = item.getFieldName();
 	    String fileName = item.getName();
 	    String contentType = item.getContentType();
 	    boolean isInMemory = item.isInMemory();
 	    long sizeInBytes = item.getSize();
-	    File dir = new File("../wyl/" + uin +"/");
+	    File dir = new File("../wyl/" + path +"/");
 	    if(!dir.exists()){
 	    	dir.mkdirs();
 	    }
@@ -180,10 +186,10 @@ public class WxImageServlet extends HttpServlet {
 	    mFile.setSize(sizeInBytes);
 	    mFile.setName(pngFile.getName());
 	    mFile.setDeleteType("DELETE");
-	    mFile.setDeleteUrl("wxImage/" + uin +"/" + pngFile.getName());
+	    mFile.setDeleteUrl("wxImage/" + path +"/" + pngFile.getName());
 	    mFile.setType("image/jpeg");
-	    mFile.setUrl("wxImage/" + uin +"/" + pngFile.getName());
-	    mFile.setThumbnailUrl("wxImage/" + uin +"/" + pngFile.getName());
+	    mFile.setUrl("wxImage/" + path +"/" + pngFile.getName());
+	    mFile.setThumbnailUrl("wxImage/" + path +"/" + pngFile.getName());
 		mFiles.add(mFile);
 	}
 

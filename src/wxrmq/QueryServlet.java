@@ -60,6 +60,7 @@ public class QueryServlet extends HttpServlet {
 		String friendsCount = req.getParameter("friendsCount");
 		String city = req.getParameter("city");
 		String sex = req.getParameter("sex");
+		String industry = req.getParameter("industry");
 	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent "
 	            + " from WxUser a  where 1=1 ";
 	    if(!TextUtils.isEmpty(quota)){
@@ -79,6 +80,9 @@ public class QueryServlet extends HttpServlet {
 	    }	
 	    if(!TextUtils.isEmpty(sex)){
 	    	sql += " and " + replaceParam(sex, "malePercent");
+	    }
+	    if(!TextUtils.isEmpty(industry)){
+	    	sql += " and exists(select 1 from wxUser_tag b where a.uin=b.uin and type= 1 and " + replaceParam(industry, "label") +")";
 	    }
 		resp.setCharacterEncoding("UTF-8");
 		List<Object[]> result = RmqDB.sqlQuery(sql + "  order by friendsCount desc LIMIT 0,500;");

@@ -31,7 +31,7 @@
 	<link rel="stylesheet" href="css/main.css">
 	<script src="js/purl.js"></script>
 	<script src="js/jquery.tmpl.min.js"></script>
-	<script src="js/wx_detail.js"></script>
+	<script src="js/wx_detail.js?v=01"></script>
 	<script src="js/canvasjs.min.js"></script>
 	<title>微营力</title>
 </head>
@@ -132,7 +132,7 @@
 		  'use strict'
 		  
 		  $.ajax({
-		    url: 'wxImage/'+$.url().param('wxid'),
+		    url: 'wxImage/'+$.url().param('wxid')+"/screenshot",
 			dataType: "json"
 		  }).done(function (result) {
 		    var carouselLinks = []
