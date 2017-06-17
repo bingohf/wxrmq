@@ -104,6 +104,10 @@
 		<servlet-class>wxrmq.WxImageServlet</servlet-class>
 	</servlet>	
 	
+	<servlet>
+		<servlet-name>QueryRedirect</servlet-name>
+		<servlet-class>wxrmq.QueryRedirectServlet</servlet-class>
+	</servlet>	
 	
 	<servlet>
 		<servlet-name>wxUserInfo</servlet-name>
@@ -205,7 +209,13 @@
 	<servlet-mapping>
 		<servlet-name>wxUserInfo</servlet-name>
 		<url-pattern>/wxUserInfo</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>QueryRedirect</servlet-name>
+		<url-pattern>/query.html</url-pattern>
+	</servlet-mapping>		
+	
 	<welcome-file-list>
 	    <welcome-file>home.jsp</welcome-file>
 	</welcome-file-list>	
