@@ -56,22 +56,37 @@ public class QueryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
 		req.setCharacterEncoding("UTF-8");
+		String start = req.getParameter("start");
+		String count = req.getParameter("count");
+		if(TextUtils.isEmpty(start)){
+			start ="0";
+		}
+		if(TextUtils.isEmpty(count)){
+			count ="500";
+		}
+		
+		String keyword = req.getParameter("keyword").replaceAll("'", "''");
 		String quota =  req.getParameter("quota");
 		String friendsCount = req.getParameter("friendsCount");
 		String city = req.getParameter("city");
 		String sex = req.getParameter("sex");
 		String industry = req.getParameter("industry");
-	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent "
+	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent,province, wxid "
 	            + " from WxUser a  where 1=1 ";
+	    
+	    if(!TextUtils.isEmpty(keyword)){
+	    	keyword ="'%" + keyword +"%'";
+	    	sql += " and CONCAT(ifnull(city,''), ifnull(province,''), nickname,ifnull(memo,''), ifnull(industry,'')) like " + keyword ;
+	    }
 	    if(!TextUtils.isEmpty(quota)){
 	    	sql += " and " + replaceParam(quota, "quota");
 	    }
 	    if(!TextUtils.isEmpty(city)){
-	    	city = replaceParam(city, "label") + " or " + replaceParam(city, "subLabel");
+	    	String tagcity = replaceParam(city, "label") + " or " + replaceParam(city, "subLabel");
 	    	if (!TextUtils.isEmpty(friendsCount)){
-	    		sql += " and  exists (select 1 from wxUser_Tag b where a.uin= b.uin and " +  replaceParam(friendsCount, "count") + " and (" + city +"))";
+	    		sql += " and  exists (select 1 from wxUser_Tag b where a.uin= b.uin and " +  replaceParam(friendsCount, "count") + " and (" + tagcity +"))";
 	    	} else{
-	    		sql += " and  exists (select 1 from wxUser_Tag b where a.uin= b.uin and (" + city +"))";
+	    		sql += " and  (province = " + replaceParam(city, "province") + " or city = " + replaceParam(city, "city") +" or exists(select 1 from wxuser_tag b where a.uin=b.uin and (" + tagcity + ")))";
 	    	}
 	    }else{
 	    	if (!TextUtils.isEmpty(friendsCount)){
@@ -85,8 +100,17 @@ public class QueryServlet extends HttpServlet {
 	    	sql += " and exists(select 1 from wxUser_tag b where a.uin=b.uin and type= 1 and " + replaceParam(industry, "label") +")";
 	    }
 		resp.setCharacterEncoding("UTF-8");
-		List<Object[]> result = RmqDB.sqlQuery(sql + "  order by friendsCount desc LIMIT 0,500;");
+		
 		QueryReturn queryReturn = new QueryReturn();
+		
+		String totalCount = "select count(1) totalCount from (" + sql +") a";
+		List totalResult = RmqDB.sqlQuery(totalCount);
+		Object totalRow = totalResult.get(0);
+		
+		queryReturn.setTotalCont(((BigInteger)totalRow).intValue());
+		
+		List<Object[]> result = RmqDB.sqlQuery(sql + "  order by friendsCount desc LIMIT " + start +"," + count);
+	
 		
 		for (Object[] row : result) {
 			QueryReturn.Item item = new QueryReturn.Item();
@@ -97,7 +121,10 @@ public class QueryServlet extends HttpServlet {
 			item.setCity((String)row[4]);
 			item.setAge((Integer)row[5]);
 			item.setIndustry((String)row[6]);
+
 			item.setMalePercent(((BigDecimal )row[7]).floatValue());
+			item.setProvince((String)row[8]);
+			item.setWxid(TextUtils.markText((String)row[9]));
 			queryReturn.getItems().add(item);
 		}
 

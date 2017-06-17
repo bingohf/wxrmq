@@ -33,6 +33,8 @@ public class QueryReturn {
 		private String industry ;
 		private Float malePercent;
 		private String memo;
+		private String wxid;
+		private String province;
 		public String getNickName() {
 			return nickName;
 		}
@@ -92,6 +94,24 @@ public class QueryReturn {
 			if(TextUtils.isEmpty(this.industry)){
 				this.industry = "";
 			}
+		}
+		public String getProvince() {
+			return province;
+		}
+		public void setProvince(String province) {
+			this.province = province;
+		}
+		public String getWxid() {
+			return wxid;
+		}
+		public void setWxid(String wxid) {
+			this.wxid = wxid;
+		}
+		public String getMemo() {
+			return memo;
+		}
+		public void setMemo(String memo) {
+			this.memo = memo;
 		}
 
 	}
