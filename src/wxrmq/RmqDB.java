@@ -11,6 +11,14 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.w3c.dom.css.ElementCSSInlineStyle;
 
+import com.google.gson.Gson;
+
+import wxrmq.data.remote.WxUserInfo;
+import wxrmq.domain.TagValue;
+import wxrmq.domain.WxUser;
+import wxrmq.domain.WxUser_Tag;
+import wxrmq.utils.TextUtils;
+
 
 public class RmqDB {
 	private static SessionFactory sessionFactory = null;
@@ -137,5 +145,61 @@ public class RmqDB {
 		return null;
 	}
 	
+	
+	public static void saveWxUserInfo(WxUserInfo wxUserInfo, WxUser wxUser){
+		wxUser.setUin(wxUserInfo.getUin());
+		wxUser.setNickName(wxUserInfo.getNickName());
+		wxUser.setFriendsCount(wxUserInfo.getFriendInfo().getFriendsCount());
+		wxUser.setAge(wxUserInfo.getAge());
+		wxUser.setQuota(wxUserInfo.getQuota());
+		wxUser.setWxId(wxUserInfo.getWxId());
+		wxUser.setProvince(wxUserInfo.getProvince());
+		wxUser.setCity(wxUserInfo.getCity());
+		wxUser.setSex(wxUserInfo.getSex());
+		wxUser.setIndustry(TextUtils.concat(wxUserInfo.getIndustry(),"/"));
+		wxUser.setInfoJson(new Gson().toJson(wxUserInfo));
+		int maleCount = wxUserInfo.getFriendInfo().getSexs().get(0).getY();
+		int femaleCount = wxUserInfo.getFriendInfo().getSexs().get(1).getY();
+		if(maleCount + femaleCount >0){
+			wxUser.setMalePercent( (maleCount * 100f / (maleCount + femaleCount)));
+		}
+		
+		SessionFactory dbfactory = RmqDB.getDBFactory();
+		Session session = dbfactory.openSession();
+		Transaction tx = session.beginTransaction();
+		try{		
+			Query query=session.createQuery("delete WxUser_Tag s where s.uin='" + wxUser.getUin() +"'");
+			query.executeUpdate();
+			session.saveOrUpdate(wxUser);
+			List<TagValue> citys = wxUserInfo.getFriendInfo().getCitys();
+			for(TagValue tagValue : citys){
+				if(tagValue.getY() >=50){
+					WxUser_Tag tag = new WxUser_Tag();
+					tag.setLabel(tagValue.getTag());
+					tag.setCount(tagValue.getY());
+					tag.setSubLabel(tagValue.getSubTag());
+					tag.setUin(wxUser.getUin());
+					tag.setType(WxUser_Tag.TYPE_CITY);
+					session.saveOrUpdate(tag);
+				}
+			}
+			for(String industry :wxUserInfo.getIndustry()){
+				WxUser_Tag tag = new WxUser_Tag();
+				tag.setLabel(industry);
+				tag.setCount(1);
+				tag.setSubLabel("");
+				tag.setUin(wxUser.getUin());
+				tag.setType(WxUser_Tag.TYPE_INDUSTRY);
+				session.saveOrUpdate(tag);
+			}
+		tx.commit();
+		}catch(HibernateException e){
+			e.printStackTrace();
+			tx.rollback();
+		}
+		session.close();
+
+		
+	}
 	
 }

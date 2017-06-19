@@ -28,6 +28,7 @@
 	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 	<script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="js/bootstrap-modal.js1"></script>
+	<script src="js/validator.js"></script>
 	
 	<style type="text/css">
 		.navigation{
@@ -94,20 +95,35 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-			<form role="form">
+			<form role="form" class="form-horizontal">
 				<div class="form-group">
-					<label for="quota">报价</label>
-					<input class="form-control" data-val="true" data-val-number="字段 报价 必须是一个数字。" id="quota" name=""quota"" type="text" value="18">
+					<label for="wxId" class="control-label col-sm-2">微信号</label>
+					<div class="col-sm-10">
+						<input class="form-control" data-val="true"   name="wxId" type="text">
+					</div>
 				</div>
 				<div class="form-group">
-					<label>年龄</label>
-					<input class="form-control" data-val="true" data-val-number="字段 Age 必须是一个数字。" id="Age" name="Age" type="text" value="18">
+					<label for="quota" class="control-label col-sm-2">报价</label>
+					<div class="col-sm-10">
+						<input class="form-control" data-val="true" data-val-number="字段 报价 必须是一个数字。"   name="quota" type="number" min=0 step="0.01">
+					</div>
 				</div>
 				<div class="form-group">
-					<label>行业/职业</label>
-					<div class="row">
-						<div class="col-lg-6">
-							<select class="form-control  m-bot15 valid" id="Job" name="Job"><option value=""></option>
+					<label for="age" class="control-label col-sm-2">年龄</label>
+					<div class="col-sm-10">
+						<input class="form-control" data-val="true" data-val-number="字段 报价 必须是一个数字。"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'step=1 min=1 name="age" type="number">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="city" class="control-label col-sm-2">城市</label>
+					<div class="col-sm-10">
+						<input class="form-control" data-val="true" name="city">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="industry" class= "control-label col-sm-2">行业/职业</label>
+					<div class="col-sm-10">
+							<select class="form-control  valid" id="Job" name="industry"><option value=""></option>
 								<option value="学生">学生</option>
 								<option value="白领">白领</option>
 								<option value="蓝领">蓝领</option>
@@ -122,20 +138,15 @@
 								<option value="IT互联网">IT互联网</option>
 								<option value="其他">其他</option>
 							</select>
-						</div>
 					</div>
 				</div>
-				<div class="form-group">
-		            <label>朋友圈描述</label>
-		            <textarea class="form-control" cols="35" id="FriendDescription" name="FriendDescription" rows="5"></textarea>
-	      	  </div>
 	      	  </form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" 
 				data-dismiss="modal">取消
 			</button>
-			<button type="button" class="btn btn-primary">
+			<button type="button" class="btn btn-primary" onclick ="savePersonalInfo(this)">
 				提交更改
 			</button>
 		</div>
@@ -184,17 +195,17 @@
 </div>
      
 	<script id="dataTmpl" type="text/x-jquery-tmpl">
-					<tr>
+					<tr uin=${uin} wxId="${wxId}" age ="${age}" quota="${quota}" industry="${industry}" city ="${city}">
 						<td><input type="checkbox" name="xx"/></td>
-						<td><img class ="head" src="wxImage/${Uin}/head.png"/>
-												<a class ="nickname" href ="wx.html?wxid=${Uin}" target ="_blank" title="${NickName}">${NickName}</a>				
+						<td><img class ="head" src="wxImage/${uin}/head.png"/>
+												<a class ="nickname" href ="wx-admin.html?wxid=${uin}" target ="_blank" title="${nickName}">${nickName}</a>				
 						</div></td>
 						<td>wechat</td>
-						<td>${FriendsCount}</td>
+						<td>${friendsCount}</td>
+						<td>${quota}</td>
 						<td>--</td>
 						<td>--</td>
-						<td>--</td>
-						<td><button class="btn_update" onclick="showUpdate(${id})">个人信息</button></td>
+						<td><button class="btn_update" onclick="showUpdate(this)">个人信息</button></td>
 					</tr>
 	</script>
 
@@ -203,23 +214,52 @@
 		$(".main-body").css('min-height', ($(window).height() - $("footer").outerHeight()) + 'px');
 	});
 	$(window).resize();
-    var showUpdate = function(data){
+    var showUpdate = function(sender){
+    	var tr = $(sender).parents("tr").first();
+    	
 		$('#myModal').modal({
 			keyboard: true
 		});
-		console.log(data);
+		$('#myModal form').attr("uin",tr.attr("uin"));
+		$('#myModal input[name=quota]').val(tr.attr("quota"));
+		$('#myModal input[name=city]').val(tr.attr("city"));
+		$('#myModal input[name=wxId]').val(tr.attr("wxId"));
+		$('#myModal input[name=age]').val(tr.attr("age"));
+		$('#myModal select[name=industry]').val(tr.attr("industry"));
     }
-	$.ajax({
-		url : 'getWxList',
-		type : 'GET',
-		dataType: "json"
-	}).done(function(a, b, c) {
-		$("#dataTmpl").tmpl(a).appendTo("#div_list");			
-	}).fail(function(xhr, textStatus, errorThrown) {
-		alert(xhr.responseText);
-	}).always(function(){
-		$("#div_loading").hide();
-	});
+
+    var refreshList = function(){
+    	$.ajax({
+    		url : 'getWxList',
+    		type : 'GET',
+    		dataType: "json"
+    	}).done(function(a, b, c) {
+    		$("#div_list").empty();
+    		$("#dataTmpl").tmpl(a).appendTo("#div_list");			
+    	}).fail(function(xhr, textStatus, errorThrown) {
+    		alert(xhr.responseText);
+    	}).always(function(){
+    		$("#div_loading").hide();
+    	});
+    };
+    var savePersonalInfo = function(sender){
+    	$('form').validator();
+    
+    	 $.ajax({
+             url : 'wxUser/' + $("form").attr("uin"),
+             type : 'POST',
+             data : $('form').serialize()
+           }).done(function(a, b, c) {
+        	   refreshList();
+        		$('#myModal').modal("hide");
+           }).fail(function(xhr, textStatus, errorThrown) {
+             alert(xhr.responseText);
+           }).always(function(){
+          
+           });
+    };
+    refreshList();
+
 </script>
 </body>
 

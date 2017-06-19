@@ -125,6 +125,16 @@ public class WxUser {
 
 
 
+	public String getWxId() {
+		return wxId;
+	}
+
+	public void setWxId(String wxId) {
+		this.wxId = wxId;
+	}
+
+
+
 	private String uin;
 	private String nickName;
 	private int sex;
@@ -139,5 +149,6 @@ public class WxUser {
 	private Float malePercent;
 	private String infoJson;
 	private String headImgUrl;
+	private String wxId;
 
 }

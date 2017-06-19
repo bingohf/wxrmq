@@ -45,6 +45,15 @@
    			padding: 0px 4px;
    			color: red;
   		}
+  		.media-body small{
+  		  white-space: nowrap;
+  		}
+  		.media-body .col-sm-4{
+  			display: inline-block;
+  		     overflow: hidden;
+  		     text-overflow: ellipsis;
+  		     white-space: normal;
+  		}
 	</style>
 </head>
 
@@ -165,22 +174,17 @@
 				</a>
 				<div class="media-body">
 					<div class="col-sm-4">
-						<div>
 							<strong>${nickName}</strong><br/>
 							<small>${wxid}</small><br/>
-							<small class="approve">信息已核实</small>
-						</div>
+							<small class="approve">已核实</small>
 					</div>
-					<div class="col-sm-4" style="width:40%"> 
- 						<div>
-							<small>
-                               	地区: ${city}<br/>
-                                                                好友: ${malePercent>=50?'男多':'女多'}<br/>
-                                                                行业: ${industry}
-                            </small>
-						</div>
+					<div class="col-sm-4" style="width:40%;"> 
+                               	<small>地区: ${city}</small>
+                                <small>好友: ${malePercent>=50?'男多':'女多'}</small>
+                                <small>行业: ${industry}</small>
+                            
 					</div>
-						<div class="col-sm-4" style="width:24%;padding:0px;text-align: right;">
+						<div class="col-sm-4" style="width:24%;padding:0px;text-align: right;overflow: visible;">
                           <small>
                             	好友数: ${friendsCount}<br/><br/>
                             <a href="wx.html?wxid=${uin}" target="_blank">查看详情</a>

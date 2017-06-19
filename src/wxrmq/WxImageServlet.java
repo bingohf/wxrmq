@@ -51,6 +51,7 @@ import retrofit2.Call;
 import wxrmq.data.remote.ContactList;
 import wxrmq.data.remote.MFile;
 import wxrmq.data.remote.UUIDResponse;
+import wxrmq.domain.Account;
 import wxrmq.domain.WxUser;
 import wxrmq.utils.NetWork;
 import wxrmq.utils.TextUtils;
@@ -123,6 +124,10 @@ public class WxImageServlet extends HttpServlet {
 
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!isAuth(req.getPathInfo(), req)){
+			resp.setStatus(403);
+			return;
+		}
 		File file = new File("../wyl" +req.getPathInfo());
 		if(file.isFile() && file.exists()){
 			file.delete();
@@ -134,6 +139,12 @@ public class WxImageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		resp.setCharacterEncoding("UTF-8");	
+		String path = req.getPathInfo();
+		if(!isAuth(path, req)){
+			resp.setStatus(403);
+			return;
+		}
+		
 		File file = new File("temp/");
 		if(!file.exists()){
 			file.mkdirs();
@@ -153,7 +164,7 @@ public class WxImageServlet extends HttpServlet {
 			    if (item.isFormField()) {
 			       // processFormField(item, ++index, uin);
 			    } else {
-			    	processUploadedFile(item, ++index, req.getPathInfo(),mFiles);
+			    	processUploadedFile(item, ++index, path,mFiles);
 			    }
 			}
 		} catch (FileUploadException e) {
@@ -193,7 +204,15 @@ public class WxImageServlet extends HttpServlet {
 		mFiles.add(mFile);
 	}
 
-	
+	private boolean isAuth(String path, HttpServletRequest req){
+		String uin = path.split("/")[1];
+		WxUser wxUser = RmqDB.getById(WxUser.class, uin);
+		Account account = (Account) req.getSession(true).getAttribute("account");
+		if(account == null || !account.getMobile().equals(wxUser.getMobile())){
+			return false;
+		}
+		return true;
+	}
 
 
 }

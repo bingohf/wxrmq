@@ -113,6 +113,11 @@
 		<servlet-name>wxUserInfo</servlet-name>
 		<servlet-class>wxrmq.WxUserInfoServlet</servlet-class>
 	</servlet>	
+	<servlet>
+		<servlet-name>wxUser</servlet-name>
+		<servlet-class>wxrmq.WxUserServlet</servlet-class>
+	</servlet>	
+	
 	<filter>
 		<filter-name>AuthFilter</filter-name>
 		<filter-class>wxrmq.AuthFilter</filter-class>
@@ -178,6 +183,7 @@
 		<servlet-name>ValidateCodeServlet</servlet-name>
 		<url-pattern>/validateCode</url-pattern>
 	</servlet-mapping>	
+	
 	<servlet-mapping>
 		<servlet-name>MobileValidationCodeServlet</servlet-name>
 		<url-pattern>/mobileValidationCode</url-pattern>
@@ -197,6 +203,7 @@
 		<servlet-name>screenShot</servlet-name>
 		<url-pattern>/screenshot/*</url-pattern>
 	</servlet-mapping>	
+	
 	<servlet-mapping>
 		<servlet-name>screenShotImg</servlet-name>
 		<url-pattern>/screenshot_img/*</url-pattern>
@@ -206,9 +213,15 @@
 		<servlet-name>wxImage</servlet-name>
 		<url-pattern>/wxImage/*</url-pattern>
 	</servlet-mapping>	
+	
 	<servlet-mapping>
 		<servlet-name>wxUserInfo</servlet-name>
 		<url-pattern>/wxUserInfo</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>wxUser</servlet-name>
+		<url-pattern>/wxUser/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

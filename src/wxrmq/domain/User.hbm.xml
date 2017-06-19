@@ -18,5 +18,6 @@
 		<property name="industry" />
 		<property name="infoJson" />
 		<property name="malePercent" />
+		<property name="wxId" />
 	</class>
 </hibernate-mapping> 

@@ -16,9 +16,10 @@ public class WxUserInfo {
 	private Float quota;
 	private Integer age;
 	private String memo;
-	private ArrayList<String> industry;
+	private ArrayList<String> industry = new ArrayList<>();
 	private FriendInfo friendInfo = new FriendInfo();
 	private Float malePercent;
+	private String wxId;
 	
 
 
@@ -141,6 +142,16 @@ public class WxUserInfo {
 
 	public void setUin(String uin) {
 		this.uin = uin;
+	}
+
+
+	public String getWxId() {
+		return wxId;
+	}
+
+
+	public void setWxId(String wxid) {
+		this.wxId = wxid;
 	}
 
 

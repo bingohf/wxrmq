@@ -1,5 +1,7 @@
 package wxrmq.utils;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class TextUtils {
@@ -22,5 +24,17 @@ public class TextUtils {
 			return text.substring(0, 2) + StringUtils.repeat("©~", text.length()-4) + text.substring(text.length()-2);
 		}
 		return text;
+	}
+	
+	public static String concat(ArrayList<String> list, String join) {
+		StringBuilder sBuilder = new StringBuilder();
+		for(int i =0; i<list.size(); ++i){
+			if(i>0){
+				sBuilder.append(join);
+			}
+			sBuilder.append(list.get(i));
+			
+		}
+		return sBuilder.toString();
 	}
 }

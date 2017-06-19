@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 public class WxUser_Tag implements Serializable {
 	
-	public static final int TYPE_INTEREST = 0;
+	public static final int TYPE_INDUSTRY = 1;
 	public static final int TYPE_AGE = 1;
 	public static final int TYPE_CITY = 2;
 	

@@ -19,6 +19,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.google.gson.Gson;
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.net.httpserver.Headers;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -47,7 +48,7 @@ public class GetWxListServlet extends HttpServlet {
 		Account curAccount = (Account) req.getSession().getAttribute("account");
 		List<Object[]> list = RmqDB.query("from WxUser where mobile =?", curAccount.getMobile());
 		
-		resp.getWriter().write(NetWork.getGson().toJson(list));
+		resp.getWriter().write(new Gson().toJson(list));
 				
 	}
 
