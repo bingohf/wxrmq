@@ -1,6 +1,7 @@
 package wxrmq.domain;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 public class WxUser {
 
@@ -135,6 +136,26 @@ public class WxUser {
 
 
 
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+
+
+	public Date getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Date updated) {
+		this.updated = updated;
+	}
+
+
+
 	private String uin;
 	private String nickName;
 	private int sex;
@@ -150,5 +171,7 @@ public class WxUser {
 	private String infoJson;
 	private String headImgUrl;
 	private String wxId;
+	private Date created;
+	private Date updated;
 
 }

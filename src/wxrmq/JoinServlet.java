@@ -2,6 +2,7 @@ package wxrmq;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +81,8 @@ public class JoinServlet extends HttpServlet {
 				req.getSession(true).setAttribute("account", account);
 			WxUserInfo wxUserInfo=  (WxUserInfo) req.getSession().getAttribute("wxUserInfo");
 			WxUser wxUser = MMapping.toWxUser(wxUserInfo);
+			wxUser.setCreated(new Date());
+			wxUser.setUpdated(new Date());
 			wxUser.setMobile(account.getMobile());
 			SessionFactory dbfactory = RmqDB.getDBFactory();
 			Session session = dbfactory.openSession();

@@ -1,6 +1,6 @@
 package wxrmq;
 
-import java.io.IOException;
+import java.io.IOException;import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -87,6 +87,7 @@ public class WxUserServlet extends HttpServlet {
 		if(!TextUtils.isEmpty(age)){
 			wxUserInfo.setAge(Integer.parseInt(age));
 		}
+		wxUser.setUpdated(new Date());
 		RmqDB.saveWxUserInfo(wxUserInfo, wxUser);
 		
 		

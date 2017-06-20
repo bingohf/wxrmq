@@ -74,7 +74,7 @@ public class QueryServlet extends HttpServlet {
 		String city = req.getParameter("city");
 		String sex = req.getParameter("sex");
 		String industry = req.getParameter("industry");
-	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent,province, wxid "
+	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent,province, wxid ,quota"
 	            + " from WxUser a  where 1=1 ";
 	    
 	    if(!TextUtils.isEmpty(keyword)){
@@ -128,6 +128,9 @@ public class QueryServlet extends HttpServlet {
 			item.setMalePercent(((BigDecimal )row[7]).floatValue());
 			item.setProvince((String)row[8]);
 			item.setWxid(TextUtils.markText((String)row[9]));
+			if(row[10]!= null ){
+				item.setQuota(((BigDecimal )row[10]).floatValue());
+			}
 			queryReturn.getItems().add(item);
 		}
 

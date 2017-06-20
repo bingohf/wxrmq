@@ -20,10 +20,10 @@ public class TextUtils {
 	}
 	
 	public static String markText(String text) {
-		if (text.length()>2){
+		if (null != text && text.length()>2){
 			return text.substring(0, 2) + StringUtils.repeat("©~", text.length()-4) + text.substring(text.length()-2);
 		}
-		return text;
+		return "";
 	}
 	
 	public static String concat(ArrayList<String> list, String join) {

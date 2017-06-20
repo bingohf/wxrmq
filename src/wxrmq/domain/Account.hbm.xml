@@ -8,6 +8,7 @@
 		<id name="mobile">
 		</id>
 		<property name="password" />
-		
+		<property name="created" />
+		<property name="updated" />
 	</class>
 </hibernate-mapping> 

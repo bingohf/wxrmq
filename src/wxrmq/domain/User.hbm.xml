@@ -19,5 +19,7 @@
 		<property name="infoJson" />
 		<property name="malePercent" />
 		<property name="wxId" />
+		<property name="created" />
+		<property name="updated" />
 	</class>
 </hibernate-mapping> 
