@@ -201,16 +201,24 @@
 					</div>
 					<div class="foot"></div>
 				</div>
+				<div class="query_row">
+					<div class="head">导出</div>
+					<div class ="body">
+						<input class ="filter" name="industry"/>
+						<span class="item"><a id="excel" href="#">结果汇出Excel</a></span>
+					</div>
+					<div class="foot"></div>
+				</div>
 			</div>
 		</form>
 		<div style="margin-top: 20px;">
-			<div id="div_loading" style="text-align: center;display: none;"><img src="img/loading.gif"/></div>
+			<div id="div_loading" style="text-align: center;display: none;"><img src="../img/loading.gif"/></div>
 			<div id ="div_list">
 
 			</div>
 			<div id ="loadmore" style="text-align: center;">
 				<a href="javascript:void(0)">加载更多</a>
-				<img src="img/loading.gif" style="display:none;" width=60 height=60/>
+				<img src="../img/loading.gif" style="display:none;" width=60 height=60/>
 			</div>
 		</div>
 	</div>
@@ -259,6 +267,21 @@
 				</div>
 	</script>
 	<script>
+	
+		function jsonToQueryString(json) {
+		    return '?' + 
+		        Object.keys(json).map(function(key) {
+		            return encodeURIComponent(key) + '=' +
+		                encodeURIComponent(json[key]);
+		        }).join('&');
+		}
+		var exportExcel = function(){
+			var excelParam = $.extend({format:'excel'}, queryParam);
+			excelParam.count+= excelParam.start;
+			excelParam.start = 0;
+			$("#excel").attr("href", '../query' + jsonToQueryString(excelParam));
+		}
+	
 	    var queryParam ={start:0, count:500};
 	    var getInput = function(){
 	    	var ret ={};
@@ -281,10 +304,12 @@
 				data :queryParam
 			}).done(function(a, b, c) {
 				$("#dataTmpl").tmpl(a.items).appendTo("#div_list");
+				queryParam.start += a.items.length ;
 				if(a.items.length < 1){
 					$('	<span style="margin: auto">没有找到任何符合条件的微信号，请更改查询条件</span>').appendTo('#div_list');
 				}			
 				$("#loadmore").show();
+				exportExcel();
 			}).fail(function(xhr, textStatus, errorThrown) {
 				alert(xhr.responseText);
 			}).always(function(){
@@ -292,17 +317,19 @@
 			});
 		}
 		var loadNextPage = function(){
-			queryParam.start = 	queryParam.start  + queryParam.count;
+			//queryParam.start = 	queryParam.start  + queryParam.count;
 			$("#loadmore img").show();
 			$("#loadmore a").hide();
 			$.ajax({
-				url : 'query',
+				url : '../query',
 				type : 'GET',
 				dataType: "json",
 				data :queryParam
 			}).done(function(a, b, c) {
+				queryParam.start += a.items.length ;
 				$("#dataTmpl").tmpl(a.items).appendTo("#div_list");		
 				$("#loadmore a").show();
+				exportExcel();
 			}).fail(function(xhr, textStatus, errorThrown) {
 				alert(xhr.responseText);
 			}).always(function(){
@@ -313,7 +340,7 @@
 			loadNextPage();
 		});
 		$(document).ready(function() {
-			$(".query_row a").click(function(){
+			$(".query_row a[qValue]").click(function(){
 				var parent = $(this).parents('.query_row');
 				parent.find("input").val($(this).attr("qValue"));
 				parent.find(".item").removeClass("active");

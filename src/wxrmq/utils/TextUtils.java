@@ -37,4 +37,13 @@ public class TextUtils {
 		}
 		return sBuilder.toString();
 	}
+	
+	public static String sexToString(int sex){
+		switch (sex) {
+		case 1:return "ÄÐ";
+		case 2:return "Å®";
+		default:
+			return "Î´Öª";
+		}
+	}
 }

@@ -5,21 +5,29 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional.TxType;
 
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.xmlbeans.impl.xb.xmlconfig.NamespaceList.Member2.Item;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.result.Output;
 
 import com.google.gson.Gson;
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
@@ -58,6 +66,12 @@ public class QueryServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		String start = req.getParameter("start");
 		String count = req.getParameter("count");
+		String format = req.getParameter("format");
+		boolean isAdmin = format != null && format.equals("excel");
+	
+		if(TextUtils.isEmpty(format)){
+			format = "json";
+		}
 		if(TextUtils.isEmpty(start)){
 			start ="0";
 		}
@@ -112,7 +126,7 @@ public class QueryServlet extends HttpServlet {
 		
 		queryReturn.setTotalCont(((BigInteger)totalRow).intValue());
 		
-		List<Object[]> result = RmqDB.sqlQuery(sql + "  order by friendsCount desc LIMIT " + start +"," + count);
+		List<Object[]> result = RmqDB.sqlQuery(sql + "  order by dataFrom,friendsCount desc LIMIT " + start +"," + count);
 	
 		
 		for (Object[] row : result) {
@@ -127,17 +141,94 @@ public class QueryServlet extends HttpServlet {
 
 			item.setMalePercent(((BigDecimal )row[7]).floatValue());
 			item.setProvince((String)row[8]);
-			item.setWxid(TextUtils.markText((String)row[9]));
+			if(isAdmin){
+				item.setWxid((String)row[9]);
+			}else{
+				item.setWxid(TextUtils.markText((String)row[9]));
+			}
 			if(row[10]!= null ){
 				item.setQuota(((BigDecimal )row[10]).floatValue());
 			}
 			queryReturn.getItems().add(item);
 		}
+		output(format, resp, queryReturn);
+		
 
-		resp.setHeader("Content-type", "text/html;charset=UTF-8");
-		resp.getWriter().write(new Gson().toJson(queryReturn));
 	}
 	
+
+	
+	private void output(String format, HttpServletResponse resp, QueryReturn queryReturn) throws IOException {
+		if(format.equals("json")){
+			output_json(resp, queryReturn);
+		}else if(format.equals("excel")){
+			output_excel(resp, queryReturn);
+		}
+		
+	}
+
+
+
+	private void output_excel(HttpServletResponse resp, QueryReturn queryReturn) throws IOException {
+		resp.reset();          
+		resp.setContentType("application/vnd.ms-excel");        //改成输出excel文件
+		resp.setHeader("Content-disposition","attachment; filename=output.xlsx" );
+		XSSFWorkbook wb = new XSSFWorkbook();
+		XSSFSheet sheet = wb.createSheet("report");
+		
+		
+		Iterator<QueryReturn.Item> iterator = queryReturn.getItems().iterator();
+		int rowIndex =0;
+		int col = 0;
+		XSSFRow row = sheet.createRow(rowIndex++);
+		row.createCell(col ++).setCellValue("微信号");
+		row.createCell(col ++).setCellValue("昵称");
+		row.createCell(col ++).setCellValue("性别");
+		row.createCell(col ++).setCellValue("年龄");
+		row.createCell(col ++).setCellValue("地区");
+		row.createCell(col ++).setCellValue("报价");
+		row.createCell(col ++).setCellValue("好友数");
+		row.createCell(col ++).setCellValue("行业");
+		while(iterator.hasNext()){
+			QueryReturn.Item item = iterator.next();
+			row = sheet.createRow(rowIndex++);
+			col = 0;
+			row.createCell(col ++).setCellValue(item.getWxid());
+			row.createCell(col ++).setCellValue(item.getNickName());
+			row.createCell(col ++).setCellValue(TextUtils.sexToString(item.getSex()));
+			if(item.getAge() != null){
+				row.createCell(col++).setCellValue(item.getAge());
+			}else{
+				col ++;
+			}
+			row.createCell(col ++).setCellValue(item.getCity());
+			if(item.getQuota() != null){
+				row.createCell(col++).setCellValue(item.getQuota());
+			}else{
+				col ++;
+			}
+			row.createCell(col++).setCellValue(item.getFriendsCount());
+			row.createCell(col++).setCellValue(item.getIndustry());
+		}
+		
+		ServletOutputStream op = resp.getOutputStream();
+		wb.write(op);
+		op.flush();
+		op.close();
+		
+		
+	}
+
+	
+
+	private void output_json(HttpServletResponse resp, QueryReturn queryReturn) throws IOException {
+		resp.setHeader("Content-type", "text/html;charset=UTF-8");
+		resp.getWriter().write(new Gson().toJson(queryReturn));
+		
+	}
+
+
+
 	private String replaceParam(String qString,String paramName){
 		return qString.replaceAll("\\(param\\)", paramName);
 	}
