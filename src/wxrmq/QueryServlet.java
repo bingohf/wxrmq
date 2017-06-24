@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional.TxType;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -30,6 +32,7 @@ import org.hibernate.Transaction;
 import org.hibernate.result.Output;
 
 import com.google.gson.Gson;
+import com.oracle.webservices.internal.api.EnvelopeStyle.Style;
 import com.oracle.webservices.internal.api.databinding.DatabindingFactory;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 import com.sun.java_cup.internal.runtime.virtual_parse_stack;
@@ -88,7 +91,7 @@ public class QueryServlet extends HttpServlet {
 		String city = req.getParameter("city");
 		String sex = req.getParameter("sex");
 		String industry = req.getParameter("industry");
-	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent,province, wxid ,quota"
+	    String sql = "select uin,nickName,Sex,FriendsCount,city,age,industry,malePercent,province, wxid ,quota,dataFrom"
 	            + " from WxUser a  where 1=1 ";
 	    
 	    if(!TextUtils.isEmpty(keyword)){
@@ -149,6 +152,8 @@ public class QueryServlet extends HttpServlet {
 			if(row[10]!= null ){
 				item.setQuota(((BigDecimal )row[10]).floatValue());
 			}
+			
+			item.setDataFrom((String)row[11]);
 			queryReturn.getItems().add(item);
 		}
 		output(format, resp, queryReturn);
@@ -180,7 +185,13 @@ public class QueryServlet extends HttpServlet {
 		Iterator<QueryReturn.Item> iterator = queryReturn.getItems().iterator();
 		int rowIndex =0;
 		int col = 0;
+		XSSFFont font = wb.createFont();
+		font.setBold(true);
+		XSSFCellStyle titleStyle = wb.createCellStyle();
+		XSSFCellStyle dataStyle = wb.createCellStyle();
+		titleStyle.setFont(font);
 		XSSFRow row = sheet.createRow(rowIndex++);
+		row.setRowStyle(titleStyle);
 		row.createCell(col ++).setCellValue("微信号");
 		row.createCell(col ++).setCellValue("昵称");
 		row.createCell(col ++).setCellValue("性别");
@@ -188,7 +199,10 @@ public class QueryServlet extends HttpServlet {
 		row.createCell(col ++).setCellValue("地区");
 		row.createCell(col ++).setCellValue("报价");
 		row.createCell(col ++).setCellValue("好友数");
+		row.createCell(col ++).setCellValue("性别分布");
 		row.createCell(col ++).setCellValue("行业");
+		row.createCell(col ++).setCellValue("来源");
+		
 		while(iterator.hasNext()){
 			QueryReturn.Item item = iterator.next();
 			row = sheet.createRow(rowIndex++);
@@ -196,6 +210,7 @@ public class QueryServlet extends HttpServlet {
 			row.createCell(col ++).setCellValue(item.getWxid());
 			row.createCell(col ++).setCellValue(item.getNickName());
 			row.createCell(col ++).setCellValue(TextUtils.sexToString(item.getSex()));
+
 			if(item.getAge() != null){
 				row.createCell(col++).setCellValue(item.getAge());
 			}else{
@@ -208,7 +223,14 @@ public class QueryServlet extends HttpServlet {
 				col ++;
 			}
 			row.createCell(col++).setCellValue(item.getFriendsCount());
+			row.createCell(col ++).setCellValue(item.getMalePercent() >= 50?"男多":"女多");
 			row.createCell(col++).setCellValue(item.getIndustry());
+			if(null != item.getDataFrom()){
+				row.createCell(col++).setCellValue(item.getDataFrom());
+			}else{
+				col++;
+			}
+			//row.setRowStyle(dataStyle);
 		}
 		
 		ServletOutputStream op = resp.getOutputStream();

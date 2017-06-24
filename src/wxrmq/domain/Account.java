@@ -20,6 +20,7 @@ public class Account {
 		account.mobile = mobile;
 		account.password = password;
 		account.setCreated(new Date());
+		account.setUpdated(new Date());
 		return account;
 	}
 

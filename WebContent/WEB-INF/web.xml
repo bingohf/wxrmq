@@ -110,6 +110,11 @@
 	</servlet>	
 	
 	<servlet>
+		<servlet-name>WxForward</servlet-name>
+		<servlet-class>wxrmq.WxForwardServlet</servlet-class>
+	</servlet>	
+	
+	<servlet>
 		<servlet-name>wxUserInfo</servlet-name>
 		<servlet-class>wxrmq.WxUserInfoServlet</servlet-class>
 	</servlet>	
@@ -228,6 +233,11 @@
 		<servlet-name>QueryRedirect</servlet-name>
 		<url-pattern>/query.html</url-pattern>
 	</servlet-mapping>		
+	
+	<servlet-mapping>
+		<servlet-name>WxForward</servlet-name>
+		<url-pattern>/wx.html</url-pattern>
+	</servlet-mapping>	
 	
 	<welcome-file-list>
 	    <welcome-file>home.jsp</welcome-file>

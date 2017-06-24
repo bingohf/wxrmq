@@ -35,6 +35,7 @@ public class QueryReturn {
 		private String memo;
 		private String wxid;
 		private String province;
+		private String dataFrom;
 		public String getNickName() {
 			return nickName;
 		}
@@ -112,6 +113,12 @@ public class QueryReturn {
 		}
 		public void setMemo(String memo) {
 			this.memo = memo;
+		}
+		public String getDataFrom() {
+			return dataFrom;
+		}
+		public void setDataFrom(String dataFrom) {
+			this.dataFrom = dataFrom;
 		}
 
 	}
