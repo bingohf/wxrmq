@@ -230,7 +230,6 @@
 				<div class="query_row">
 					<div class="head">导出</div>
 					<div class ="body">
-						<input class ="filter" name="industry"/>
 						<span class="item"><a id="excel" href="#">结果汇出Excel</a></span>
 					</div>
 					<div class="foot"></div>
@@ -365,11 +364,13 @@
 				$("#loadmore img").hide();
 			});
 		}
-		$("#loadmore a").click(function(){
+		$("#loadmore a").click(function(e){
+			e.preventDefault();
 			loadNextPage();
 		});
 		$(document).ready(function() {
-			$(".query_row a[qValue]").click(function(){
+			$(".query_row a[qValue]").click(function(e){
+				e.preventDefault();
 				var parent = $(this).parents('.query_row');
 				parent.find("input").val($(this).attr("qValue"));
 				parent.find(".item").removeClass("active");
@@ -378,7 +379,7 @@
 				doQuery();
 			});
 
-			$("#keywordBtn").click(function(){
+			$("#keywordBtn").click(function(e){
 				doQuery();
 			});
 			$(".query_row select").change(function(){

@@ -7,7 +7,7 @@
         <!-- mysql数据库驱动 -->  
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>  
         <!-- mysql数据库名称 -->  
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:2306/mysql</property>  
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:2306/mysql?autoReconnect=true</property>  
         <!-- 数据库的登陆用户名 -->  
         <property name="hibernate.connection.username">root</property>  
         <!-- 数据库的登陆密码 -->  

@@ -49,7 +49,8 @@ $(function () {
 			$("#loadmore img").hide();
 		});
 	}
-	$("#loadmore a").click(function(){
+	$("#loadmore a").click(function(e){
+		e.preventDefault();
 		loadNextPage();
 	});
 	$("div.filter .btn-group .dropdown-menu a").click(function(){

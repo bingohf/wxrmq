@@ -198,7 +198,7 @@
 					<tr uin=${uin} wxId="${wxId}" age ="${age}" quota="${quota}" industry="${industry}" city ="${city}">
 						<td><input type="checkbox" name="xx"/></td>
 						<td><img class ="head" src="wxImage/${uin}/head.png"/>
-												<a class ="nickname" href ="wx.html?wxid=${uin}" target ="_blank" title="${nickName}">${nickName}</a>				
+												<a class ="nickname" href ="wx.html?wxid=${uin}&nocache=${$item.random()}" target ="_blank" title="${nickName}">${nickName}</a>				
 						</div></td>
 						<td>wechat</td>
 						<td>${friendsCount}</td>
@@ -235,7 +235,7 @@
     		dataType: "json"
     	}).done(function(a, b, c) {
     		$("#div_list").empty();
-    		$("#dataTmpl").tmpl(a).appendTo("#div_list");			
+    		$("#dataTmpl").tmpl(a,{random:function(){return Math.random();}}).appendTo("#div_list");			
     	}).fail(function(xhr, textStatus, errorThrown) {
     		alert(xhr.responseText);
     	}).always(function(){

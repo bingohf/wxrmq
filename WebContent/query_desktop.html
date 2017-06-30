@@ -136,7 +136,7 @@
 						<span class="item"><a  href="#" qValue="(param) >= 50" >男多</a></span>
 						<span class="item"><a  href="#" qValue="(param) < 50" >女多</a></span>
 					</div>
-					<div class="foot"></div>
+					<div class="foot"> </div>
 				</div>
 				<div class="query_row">
 					<div class="head">地域</div>
@@ -316,11 +316,13 @@
 				$("#loadmore img").hide();
 			});
 		}
-		$("#loadmore a").click(function(){
+		$("#loadmore a").click(function(e){
 			loadNextPage();
+			e.preventDefault();
 		});
 		$(document).ready(function() {
-			$(".query_row a").click(function(){
+			$(".query_row a").click(function(e){
+				e.preventDefault();
 				var parent = $(this).parents('.query_row');
 				parent.find("input").val($(this).attr("qValue"));
 				parent.find(".item").removeClass("active");
